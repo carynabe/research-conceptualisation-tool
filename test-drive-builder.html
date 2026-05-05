@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Drive Your Research — Builder</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#ffffff;--bg2:#f5f4f0;--bg3:#eceae4;--text:#1a1a18;--text2:#5a5a56;--text3:#9a9a94;--border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);--radius:8px;--radius-lg:12px;--and:#1D9E75;--and-bg:#E1F5EE;--and-text:#085041;--but:#D85A30;--but-bg:#FAECE7;--but-text:#4A1B0C;--thr:#534AB7;--thr-bg:#EEEDFE;--thr-text:#26215C;--amber:#BA7517;--amber-bg:#FAEEDA;--amber-text:#412402;--accent:#1a1a18}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1a;--bg2:#252522;--bg3:#2e2e2b;--text:#e8e6de;--text2:#a8a69e;--text3:#6a6a64;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2)}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px}
+.shell{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem}
+.masthead{margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:0.5px solid var(--border)}
+.masthead h1{font-size:22px;font-weight:500;margin-bottom:4px}
+.masthead p{font-size:13px;color:var(--text3);line-height:1.5}
+.back-link{display:inline-block;font-size:12px;color:var(--thr-text);text-decoration:none;padding:4px 10px;border:0.5px solid var(--thr);border-radius:20px;margin-bottom:1rem;background:var(--thr-bg)}
+.def-box{padding:14px 16px;border-radius:var(--radius);background:var(--bg2);border-left:3px solid var(--thr);font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:1.5rem}
+.def-box strong{color:var(--thr-text);font-weight:500}
+.progress{display:grid;grid-template-columns:repeat(7,1fr);gap:0;border-radius:var(--radius-lg);overflow:hidden;border:0.5px solid var(--border);margin-bottom:2rem}
+.ps{padding:9px 4px;text-align:center;font-size:10px;color:var(--text3);cursor:pointer;background:var(--bg2);border-right:0.5px solid var(--border);transition:background .15s,color .15s;user-select:none;line-height:1.3}
+.ps:last-child{border-right:none}
+.ps:hover{background:var(--bg3);color:var(--text2)}
+.ps.active{background:var(--bg);color:var(--text);font-weight:500}
+.ps.done{color:var(--text3)}
+.ps.done::before{content:"✓ ";color:var(--and)}
+.stage{display:none}
+.stage.active{display:block}
+.stage-label{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.stage-title{font-size:20px;font-weight:500;color:var(--text);margin-bottom:10px}
+.stage-purpose{font-size:13px;color:var(--text2);line-height:1.65;padding:12px 16px;background:var(--bg2);border-radius:var(--radius);border-left:2.5px solid var(--border2);margin-bottom:1.5rem}
+.chain{display:flex;align-items:center;gap:0;margin:1rem 0 1.5rem;overflow-x:auto;padding-bottom:4px}
+.cn{padding:7px 10px;font-size:10px;font-weight:500;border-radius:var(--radius);white-space:nowrap;border:0.5px solid var(--border);background:var(--bg2);color:var(--text2)}
+.cn.active-node{background:var(--thr-bg);color:var(--thr-text);border-color:var(--thr)}
+.cn.done-node{background:var(--and-bg);color:var(--and-text);border-color:var(--and)}
+.ca{font-size:12px;color:var(--text3);padding:0 3px;flex-shrink:0}
+.probe-group{margin-bottom:1.5rem}
+.probe-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500}
+.bc{background:var(--bg2);color:var(--text2);border:0.5px solid var(--border2)}
+.ba{background:var(--and-bg);color:var(--and-text)}
+.bb{background:var(--but-bg);color:var(--but-text)}
+.bt{background:var(--thr-bg);color:var(--thr-text)}
+.bam{background:var(--amber-bg);color:var(--amber-text)}
+.probe-q{font-size:13px;color:var(--text);line-height:1.65;margin-bottom:8px;padding:10px 13px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--bg)}
+.probe-q em{color:var(--text3);font-style:italic;font-size:12px}
+textarea{width:100%;min-height:85px;padding:10px 13px;font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);resize:vertical;line-height:1.6;transition:border-color .15s}
+textarea:focus{outline:none;border-color:var(--accent)}
+textarea::placeholder{color:var(--text3);font-style:italic;font-size:12px}
+.link-check{padding:12px 14px;border-radius:var(--radius);background:var(--amber-bg);border:0.5px solid #FAC775;margin:1rem 0}
+.lc-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--amber-text);margin-bottom:6px}
+.link-check p{font-size:13px;color:var(--amber-text);line-height:1.55}
+.link-check em{font-style:italic;font-size:12px}
+.method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.mcard{padding:11px 13px;border-radius:var(--radius);border:0.5px solid var(--border);cursor:pointer;transition:border-color .15s,background .15s}
+.mcard:hover{border-color:var(--border2);background:var(--bg2)}
+.mcard.selected{border:1.5px solid var(--accent);background:var(--bg2)}
+.mcard-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px}
+.mcard-desc{font-size:11px;color:var(--text2);line-height:1.4}
+.nav-row{display:flex;gap:8px;margin-top:2rem;align-items:center;justify-content:space-between;padding-top:1.25rem;border-top:0.5px solid var(--border)}
+.btn{padding:9px 18px;font-size:13px;font-family:inherit;border-radius:var(--radius);cursor:pointer;font-weight:500;transition:opacity .15s;border:0.5px solid var(--border2);background:var(--bg);color:var(--text)}
+.btn:hover{opacity:.8}
+.btn-primary{background:var(--accent);color:var(--bg);border-color:transparent}
+.btn-export{background:var(--thr-bg);color:var(--thr-text);border-color:var(--thr)}
+.note-small{font-size:12px;color:var(--text3);font-style:italic}
+.am-row{display:flex;align-items:stretch;gap:8px;margin-bottom:6px}
+.am-label{width:130px;flex-shrink:0;padding:10px 12px;font-size:12px;font-weight:500;color:var(--text2);background:var(--bg2);border-radius:var(--radius);border:0.5px solid var(--border);display:flex;align-items:center}
+.am-content{flex:1;padding:10px 12px;font-size:12px;color:var(--text);background:var(--bg);border-radius:var(--radius);border:0.5px solid var(--border);line-height:1.5;min-height:40px}
+.am-content.empty{color:var(--text3);font-style:italic}
+.am-arrow{display:flex;align-items:center;color:var(--text3);font-size:14px;padding:0 4px;margin-left:130px}
+.export-panel{display:none;margin-top:1.5rem;padding:16px;border-radius:var(--radius-lg);border:0.5px solid var(--border2);background:var(--bg2)}
+.export-panel.visible{display:block}
+.export-panel h3{font-size:14px;font-weight:500;margin-bottom:10px}
+.export-text{width:100%;min-height:280px;padding:12px;font-size:12px;font-family:'Courier New',monospace;color:var(--text);background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);resize:vertical;line-height:1.6}
+.copy-confirm{display:none;font-size:12px;color:var(--and);margin-top:6px;font-weight:500}
+@media(max-width:600px){.progress{grid-template-columns:repeat(4,1fr)}.method-grid{grid-template-columns:1fr}.am-label{width:90px;font-size:11px}.am-arrow{margin-left:90px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="masthead">
+  <a class="back-link" href="index.html">← All tools</a>
+  <h1>Test drive your research — builder</h1>
+  <p>Work through each stage to discover the alignment in your research design before you build your presentation. The slides come after the thinking, not before.</p>
+</div>
+
+<div class="def-box"><strong>What alignment means here:</strong> Structural and conceptual alignment is based on a set of judgements the researcher has intentionally negotiated. This flow represents your aligned project, where the research design supports answering the research question and the questions in turn speak directly to unpacking the research problem. Logical coherence is the justification of that flow — from conceptualisation, purpose, problem, questions, key literature and concepts, and the research gap, through to the research design.</div>
+
+<div class="progress">
+  <div class="ps active" onclick="goTo(0)">1. PPSQ</div>
+  <div class="ps" onclick="goTo(1)">2. Framework</div>
+  <div class="ps" onclick="goTo(2)">3. Methodology</div>
+  <div class="ps" onclick="goTo(3)">4. Methods</div>
+  <div class="ps" onclick="goTo(4)">5. Data</div>
+  <div class="ps" onclick="goTo(5)">6. Ethics</div>
+  <div class="ps" onclick="goTo(6)">7. Alignment</div>
+</div>
+
+<!-- STAGE 0 -->
+<div class="stage active" id="stage-0">
+  <div class="stage-label">Stage 1 — Foundation</div>
+  <div class="stage-title">Your PPSQ</div>
+  <div class="stage-purpose">Everything in your research design flows from and returns to the PPSQ. Before testing the logic of your design, the PPSQ itself needs to be clear and coherent. State it here — this is your anchor for every decision that follows.</div>
+  <div class="chain"><div class="cn active-node">PPSQ</div><div class="ca">→</div><div class="cn">Framework</div><div class="ca">→</div><div class="cn">Methodology</div><div class="ca">→</div><div class="cn">Methods</div><div class="ca">→</div><div class="cn">Data</div><div class="ca">→</div><div class="cn">Ethics</div><div class="ca">→</div><div class="cn">RQ answered</div></div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bc">Purpose</span> State your purpose statement</div>
+    <div class="probe-q">One sentence. <em>Format: "The purpose of this study is to [analytical verb] [what] in [context] in order to [contribution]."</em></div>
+    <textarea id="s0-purpose" style="min-height:60px" placeholder="The purpose of this study is to..."></textarea>
+  </div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bc">Problem</span> State your problem statement</div>
+    <div class="probe-q">Three to five sentences. Context → gap → tension → stakes. <em>(No filler. Every sentence earns its place.)</em></div>
+    <textarea id="s0-problem" rows="4" placeholder="[Context] [Gap] [Tension] [Stakes]"></textarea>
+  </div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bc">Research questions</span> State your research questions</div>
+    <div class="probe-q">Two to three questions. Each must follow from the problem statement. <em>(Avoid: to what extent, evaluate, assess. Use: examine, analyse, investigate, trace, account for.)</em></div>
+    <textarea id="s0-rq" rows="3" placeholder="RQ1: ...&#10;RQ2: ...&#10;RQ3 (optional): ..."></textarea>
+  </div>
+  <div class="link-check"><div class="lc-label">Alignment check</div><p>Does the verb in your purpose statement match the kind of investigation your questions are asking for? <em>(If the purpose says "examine" but the questions ask "to what extent," the logic is already broken.)</em></p></div>
+  <div class="nav-row"><span class="note-small">Responses saved in this session</span><button class="btn btn-primary" onclick="goTo(1)">Next: conceptual framework →</button></div>
+</div>
+
+<!-- STAGE 1 -->
+<div class="stage" id="stage-1">
+  <div class="stage-label">Stage 2 — Conceptual framework</div>
+  <div class="stage-title">The lens you are looking through</div>
+  <div class="stage-purpose">A conceptual framework is not a list of theories. It is the set of analytical tools — concepts, theoretical traditions, key arguments — that you are using to look at your problem. It determines what you can see and what you cannot. It must connect directly to your research questions.</div>
+  <div class="chain"><div class="cn done-node">PPSQ</div><div class="ca">→</div><div class="cn active-node">Framework</div><div class="ca">→</div><div class="cn">Methodology</div><div class="ca">→</div><div class="cn">Methods</div><div class="ca">→</div><div class="cn">Data</div><div class="ca">→</div><div class="cn">Ethics</div><div class="ca">→</div><div class="cn">RQ answered</div></div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bt">Key concepts</span> What are the two or three central concepts in your framework?</div>
+    <div class="probe-q">Name each concept and give it a meaning in context — not a dictionary definition. How does each concept help you see or analyse something specific about your research problem? <em>(A concept without contextual meaning is just a label.)</em></div>
+    <textarea id="s1-concepts" placeholder="Concept 1: [Name] — In my study this means... It helps me see...&#10;&#10;Concept 2: [Name] — In my study this means..."></textarea>
+  </div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bt">Theoretical tradition</span> What theoretical tradition grounds your framework?</div>
+    <div class="probe-q">Who developed the theoretical tools you are using? How has this tradition been applied in comparable studies? Where does your application align with or deviate from prior use? <em>(If you cannot name a tradition, you have a topic, not a framework.)</em></div>
+    <textarea id="s1-tradition" placeholder="My framework draws on [theoretical tradition/scholar] because... This has been used by [author, year] to... My application aligns in that... but deviates in that..."></textarea>
+  </div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bt">Framework to RQ connection</span> How does your framework connect to each research question?</div>
+    <div class="probe-q">For each research question, identify which concept or theoretical tool does the analytical work. <em>(If a research question has no connection to your framework, either the question or the framework needs revision.)</em></div>
+    <textarea id="s1-connection" placeholder="RQ1 is addressed through [concept/tool] because...&#10;RQ2 is addressed through [concept/tool] because..."></textarea>
+  </div>
+  <div class="link-check"><div class="lc-label">Alignment check</div><p>Does your framework provide tools to answer your research questions — or does it describe background to your topic? <em>(Background belongs in the literature review. The framework belongs in the analysis.)</em></p></div>
+  <div class="nav-row"><button class="btn" onclick="goTo(0)">← Back</button><button class="btn btn-primary" onclick="goTo(2)">Next: methodology →</button></div>
+</div>
+
+<!-- STAGE 2 -->
+<div class="stage" id="stage-2">
+  <div class="stage-label">Stage 3 — Methodology</div>
+  <div class="stage-title">Your philosophical and design choices</div>
+  <div class="stage-purpose">Methodology is not the same as methods. It is the philosophical position that justifies your approach — why qualitative, why document analysis, why mixed methods. It must follow logically from your research problem and questions. A methodology chosen because it seems manageable is not a justified methodology.</div>
+  <div class="chain"><div class="cn done-node">PPSQ</div><div class="ca">→</div><div class="cn done-node">Framework</div><div class="ca">→</div><div class="cn active-node">Methodology</div><div class="ca">→</div><div class="cn">Methods</div><div class="ca">→</div><div class="cn">Data</div><div class="ca">→</div><div class="cn">Ethics</div><div class="ca">→</div><div class="cn">RQ answered</div></div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bam">Approach</span> Which methodological approach are you using?</div>
+    <div class="method-grid">
+      <div class="mcard" onclick="selectMethod(this,'qualitative')"><div class="mcard-title">Qualitative</div><div class="mcard-desc">Concerned with meaning, interpretation, and context. Suited to understanding how and why.</div></div>
+      <div class="mcard" onclick="selectMethod(this,'document analysis')"><div class="mcard-title">Document analysis</div><div class="mcard-desc">Systematic examination of existing texts, records, or artefacts as primary data sources.</div></div>
+      <div class="mcard" onclick="selectMethod(this,'mixed methods')"><div class="mcard-title">Mixed methods</div><div class="mcard-desc">Combines qualitative and quantitative approaches. Requires explicit justification for the combination.</div></div>
+    </div>
+    <textarea id="s2-approach" placeholder="I have chosen [methodology] because my research questions ask for [type of knowledge]. This is appropriate because..."></textarea>
+  </div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bam">Philosophical position</span> What assumptions are you making about the social reality you are studying?</div>
+    <div class="probe-q">In plain terms: are you treating your phenomenon as something that exists independently of interpretation, or as something constructed through it? <em>(You do not need jargon, but you do need to be able to state your position.)</em></div>
+    <textarea id="s2-philosophy" placeholder="I am treating [phenomenon] as... This means I assume that knowledge of it is produced by... This is consistent with a [interpretivist / constructivist / critical realist / other] position because..."></textarea>
+  </div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bam">Justification</span> Why is this methodology appropriate for your specific research problem?</div>
+    <div class="probe-q">Connect your methodology directly to your problem statement and research questions. Why would a different approach not work here? <em>(Justification by elimination is valid. Saying why alternatives do not fit is as strong as saying why yours does.)</em></div>
+    <textarea id="s2-justify" placeholder="This methodology is appropriate because my problem requires [type of investigation]. A quantitative approach would not work because... Document analysis is suited because..."></textarea>
+  </div>
+  <div class="link-check"><div class="lc-label">Alignment check</div><p>Does your methodology follow from your research questions — or did you choose it first and retrofit the questions? <em>(A panel reviewer will ask this directly.)</em></p></div>
+  <div class="nav-row"><button class="btn" onclick="goTo(1)">← Back</button><button class="btn btn-primary" onclick="goTo(3)">Next: methods →</button></div>
+</div>
+
+<!-- STAGE 3 -->
+<div class="stage" id="stage-3">
+  <div class="stage-label">Stage 4 — Methods and instruments</div>
+  <div class="stage-title">How you will collect and analyse</div>
+  <div class="stage-purpose">Methods are the specific techniques you will use to gather and analyse data. They must follow from your methodology. Each method needs a justification — not just a description of what it is, but why it is the right tool for this problem.</div>
+  <div class="chain"><div class="cn done-node">PPSQ</div><div class="ca">→</div><div class="cn done-node">Framework</div><div class="ca">→</div><div class="cn done-node">Methodology</div><div class="ca">→</div><div class="cn active-node">Methods</div><div class="ca">→</div><div class="cn">Data</div><div class="ca">→</div><div class="cn">Ethics</div><div class="ca">→</div><div class="cn">RQ answered</div></div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bc">Data collection</span> How will you gather your data?</div>
+    <div class="probe-q">Name your data collection method/s. For each: what will it produce, and which research question does it speak to? <em>(For secondary data studies: where are the documents or datasets coming from, and what makes them appropriate sources?)</em></div>
+    <textarea id="s3-collection" placeholder="Method 1: [Name] — This will produce [type of data]. It speaks to RQ[X] because...&#10;&#10;Method 2 (if applicable): ..."></textarea>
+  </div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bc">Analysis</span> How will you analyse your data?</div>
+    <div class="probe-q">Name your analytical approach. Explain what it does to data and why that process produces the kind of knowledge your study needs. <em>("I will analyse the data thematically" is not enough. Explain what thematic analysis does and why that fits your questions.)</em></div>
+    <textarea id="s3-analysis" placeholder="I will use [analytical approach] because it allows me to... This is appropriate because... The process involves..."></textarea>
+  </div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bc">Instruments</span> What instruments will you use, if any?</div>
+    <div class="probe-q">Describe any instruments — interview guides, coding frameworks, document review templates — and explain how they operationalise your research questions. <em>(If your study uses secondary data only, explain how you will apply your analytical framework to the documents.)</em></div>
+    <textarea id="s3-instruments" placeholder="Instrument: [Describe]. This operationalises [concept/RQ] by... It is appropriate because..."></textarea>
+  </div>
+  <div class="link-check"><div class="lc-label">Alignment check</div><p>Do your methods follow from your methodology — or were they chosen because they seem practical? <em>(Convenience is not a methodological justification.)</em></p></div>
+  <div class="nav-row"><button class="btn" onclick="goTo(2)">← Back</button><button class="btn btn-primary" onclick="goTo(4)">Next: data →</button></div>
+</div>
+
+<!-- STAGE 4 -->
+<div class="stage" id="stage-4">
+  <div class="stage-label">Stage 5 — Data sources</div>
+  <div class="stage-title">What you are working with and why</div>
+  <div class="stage-purpose">Data sources are proxies. They stand in for concepts you cannot observe directly. The question is not just what data you have access to — it is what each source makes visible about your research problem, and what it cannot show.</div>
+  <div class="chain"><div class="cn done-node">PPSQ</div><div class="ca">→</div><div class="cn done-node">Framework</div><div class="ca">→</div><div class="cn done-node">Methodology</div><div class="ca">→</div><div class="cn done-node">Methods</div><div class="ca">→</div><div class="cn active-node">Data</div><div class="ca">→</div><div class="cn">Ethics</div><div class="ca">→</div><div class="cn">RQ answered</div></div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge ba">Sources</span> What are your data sources?</div>
+    <div class="probe-q">For each source: name it, explain how you will access it, identify which concept or RQ it operationalises, and state what it can and cannot show. <em>(The "cannot show" is as important as the "can show." A source that appears to answer everything has not been thought through.)</em></div>
+    <textarea id="s4-sources" rows="6" placeholder="Source 1: [Name] — Accessed via [where]. Operationalises [concept]. Can show: ... Cannot show: ...&#10;&#10;Source 2: ..."></textarea>
+  </div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge ba">Adequacy</span> Are your data sources adequate to answer your research questions?</div>
+    <div class="probe-q">Take each research question: do your identified sources provide enough material to investigate it? Where are the gaps? <em>(If a RQ cannot be answered by any identified source, you need either a different source or a different question.)</em></div>
+    <textarea id="s4-adequacy" placeholder="RQ1 can be investigated using [source/s] because... The limitation is...&#10;RQ2 can be investigated using [source/s] because... The limitation is..."></textarea>
+  </div>
+  <div class="link-check"><div class="lc-label">Alignment check</div><p>Are your data sources chosen because they are the best available proxies for your concepts — or because they were easy to find? <em>(Name both, but be honest about the difference.)</em></p></div>
+  <div class="nav-row"><button class="btn" onclick="goTo(3)">← Back</button><button class="btn btn-primary" onclick="goTo(5)">Next: ethics →</button></div>
+</div>
+
+<!-- STAGE 5 -->
+<div class="stage" id="stage-5">
+  <div class="stage-label">Stage 6 — Ethical considerations</div>
+  <div class="stage-title">What your study owes to those it involves</div>
+  <div class="stage-purpose">Ethics in research is not a compliance checklist. It is a set of reasoned commitments about how your study will treat the people, institutions, and knowledge it engages with. Even secondary data studies carry ethical obligations — around attribution, representation, and the use of sensitive information.</div>
+  <div class="chain"><div class="cn done-node">PPSQ</div><div class="ca">→</div><div class="cn done-node">Framework</div><div class="ca">→</div><div class="cn done-node">Methodology</div><div class="ca">→</div><div class="cn done-node">Methods</div><div class="ca">→</div><div class="cn done-node">Data</div><div class="ca">→</div><div class="cn active-node">Ethics</div><div class="ca">→</div><div class="cn">RQ answered</div></div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bb">Ethical dimensions</span> What ethical considerations are relevant to your study?</div>
+    <div class="probe-q">Does your study involve human subjects directly or indirectly? Sensitive documents or personal data? Politically contested material? Vulnerable communities? <em>("This study uses secondary data so there are no ethical concerns" is rarely correct. Name the considerations even if you then argue they are minimal.)</em></div>
+    <textarea id="s5-dimensions" placeholder="The ethical considerations relevant to my study include... My study involves [describe] which raises questions about..."></textarea>
+  </div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bb">Justification</span> How have you addressed or will you address these considerations?</div>
+    <div class="probe-q">For each consideration: what steps have you taken or will you take? Where risks cannot be eliminated, how have you minimised or acknowledged them? <em>(A well-justified ethical position names the risk and explains the mitigation — it does not deny the risk exists.)</em></div>
+    <textarea id="s5-justify" placeholder="To address [consideration], I will... The limitation of this mitigation is... My study will [protect / anonymise / attribute / acknowledge] by..."></textarea>
+  </div>
+  <div class="link-check"><div class="lc-label">Alignment check</div><p>Are your ethical considerations specific to your study — or generic statements that could apply to any research? <em>(Generic ethics sections signal that the researcher has not thought through the specific risks of their own design.)</em></p></div>
+  <div class="nav-row"><button class="btn" onclick="goTo(4)">← Back</button><button class="btn btn-primary" onclick="goTo(6)">Next: alignment map →</button></div>
+</div>
+
+<!-- STAGE 6 -->
+<div class="stage" id="stage-6">
+  <div class="stage-label">Stage 7 — Alignment</div>
+  <div class="stage-title">The full chain</div>
+  <div class="stage-purpose">This is your alignment map — a summary of the entire chain from PPSQ to research design. Read it as a whole. Every element should follow logically from the previous one. This is what your presentation needs to communicate. If a link looks weak here, strengthen it before you build the slides.</div>
+
+  <div id="alignment-map" style="margin:1.5rem 0">
+    <div class="am-row"><div class="am-label">Purpose</div><div class="am-content empty" id="am-purpose">not yet completed</div></div>
+    <div class="am-arrow">↓</div>
+    <div class="am-row"><div class="am-label">Problem</div><div class="am-content empty" id="am-problem">not yet completed</div></div>
+    <div class="am-arrow">↓</div>
+    <div class="am-row"><div class="am-label">Research questions</div><div class="am-content empty" id="am-rq">not yet completed</div></div>
+    <div class="am-arrow">↓</div>
+    <div class="am-row"><div class="am-label">Key concepts</div><div class="am-content empty" id="am-concepts">not yet completed</div></div>
+    <div class="am-arrow">↓</div>
+    <div class="am-row"><div class="am-label">Methodology</div><div class="am-content empty" id="am-method">not yet completed</div></div>
+    <div class="am-arrow">↓</div>
+    <div class="am-row"><div class="am-label">Methods and data</div><div class="am-content empty" id="am-methods">not yet completed</div></div>
+    <div class="am-arrow">↓</div>
+    <div class="am-row"><div class="am-label">Ethics</div><div class="am-content empty" id="am-ethics">not yet completed</div></div>
+  </div>
+
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bt">Weak links</span> Where does your chain feel weakest?</div>
+    <div class="probe-q">Which link between elements is hardest to justify? Name it and explain what you would need to do to strengthen it before your presentation. <em>(Naming a weak link is a sign of analytical rigour, not failure. Panels respect researchers who know where their design is under pressure.)</em></div>
+    <textarea id="s6-weak" placeholder="The weakest link in my chain is between [element] and [element] because... To strengthen this I would need to..."></textarea>
+  </div>
+  <div class="probe-group">
+    <div class="probe-label"><span class="badge bt">Panel question</span> What is the hardest question a panel reviewer could ask you?</div>
+    <div class="probe-q">Anticipate the sharpest critique of your design. State it as a question. Then answer it. <em>(If you cannot answer it, your presentation will not survive peer review. The purpose of this exercise is to find that out now, not in the room.)</em></div>
+    <textarea id="s6-panel" placeholder="The hardest question a reviewer could ask is: [state it]&#10;&#10;My answer is: ..."></textarea>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn" onclick="goTo(5)">← Back</button>
+    <button class="btn btn-export" onclick="buildExport()">Export my alignment ↓</button>
+  </div>
+
+  <div class="export-panel" id="export-panel">
+    <h3>Your alignment — copy into your preparation notes</h3>
+    <textarea class="export-text" id="export-text" readonly></textarea>
+    <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+      <button class="btn btn-primary" onclick="copyExport()">Copy to clipboard</button>
+      <span class="copy-confirm" id="copy-confirm">Copied.</span>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+let cur=0;
+function goTo(n){
+  document.getElementById('stage-'+cur).classList.remove('active');
+  document.querySelectorAll('.ps')[cur].classList.remove('active');
+  document.querySelectorAll('.ps')[cur].classList.add('done');
+  cur=n;
+  document.getElementById('stage-'+n).classList.add('active');
+  document.querySelectorAll('.ps')[n].classList.remove('done');
+  document.querySelectorAll('.ps')[n].classList.add('active');
+  window.scrollTo(0,0);
+  if(n===6)updateMap();
+}
+function selectMethod(el,v){
+  document.querySelectorAll('.mcard').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function g(id){const e=document.getElementById(id);return e?e.value.trim():''}
+function setAM(id,val){
+  const el=document.getElementById(id);if(!el)return;
+  const p=val&&val.trim()?val.trim().substring(0,150)+(val.trim().length>150?'...':''):'';
+  if(p){el.textContent=p;el.classList.remove('empty');}
+  else{el.textContent='not yet completed';el.classList.add('empty');}
+}
+function updateMap(){
+  setAM('am-purpose',g('s0-purpose'));
+  setAM('am-problem',g('s0-problem'));
+  setAM('am-rq',g('s0-rq'));
+  setAM('am-concepts',g('s1-concepts'));
+  setAM('am-method',g('s2-approach')||g('s2-justify'));
+  setAM('am-methods',(g('s3-collection')+' '+g('s3-analysis')).trim());
+  setAM('am-ethics',g('s5-dimensions'));
+}
+function buildExport(){
+  updateMap();
+  const sections=[
+    ['PURPOSE STATEMENT',g('s0-purpose')],
+    ['PROBLEM STATEMENT',g('s0-problem')],
+    ['RESEARCH QUESTIONS',g('s0-rq')],
+    ['KEY CONCEPTS AND FRAMEWORK',g('s1-concepts')],
+    ['THEORETICAL TRADITION',g('s1-tradition')],
+    ['FRAMEWORK TO RQ CONNECTION',g('s1-connection')],
+    ['METHODOLOGY AND JUSTIFICATION',g('s2-approach')+'\n\n'+g('s2-justify')],
+    ['PHILOSOPHICAL POSITION',g('s2-philosophy')],
+    ['DATA COLLECTION METHODS',g('s3-collection')],
+    ['ANALYTICAL APPROACH',g('s3-analysis')],
+    ['INSTRUMENTS',g('s3-instruments')],
+    ['DATA SOURCES',g('s4-sources')],
+    ['DATA ADEQUACY',g('s4-adequacy')],
+    ['ETHICAL CONSIDERATIONS',g('s5-dimensions')],
+    ['ETHICAL JUSTIFICATION',g('s5-justify')],
+    ['WEAKEST LINK IN THE CHAIN',g('s6-weak')],
+    ['ANTICIPATED PANEL QUESTION AND ANSWER',g('s6-panel')],
+  ];
+  const line='─'.repeat(60);
+  let out='TEST DRIVE YOUR RESEARCH — ALIGNMENT EXPORT\n';
+  out+=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+'\n';
+  out+=line+'\n\n';
+  sections.forEach(([label,val])=>{
+    out+=label+'\n'+line+'\n';
+    out+=(val&&val.trim()?val.trim():'[not completed]')+'\n\n';
+  });
+  document.getElementById('export-text').value=out;
+  document.getElementById('export-panel').classList.add('visible');
+  document.getElementById('export-panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function copyExport(){
+  const ta=document.getElementById('export-text');ta.select();document.execCommand('copy');
+  const c=document.getElementById('copy-confirm');c.style.display='inline';
+  setTimeout(()=>{c.style.display='none';},2500);
+}
+</script>
+</body>
+</html>

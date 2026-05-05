@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Drive Your Research — Peer Reviewer</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#ffffff;--bg2:#f5f4f0;--bg3:#eceae4;--text:#1a1a18;--text2:#5a5a56;--text3:#9a9a94;--border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);--radius:8px;--radius-lg:12px;--and:#1D9E75;--and-bg:#E1F5EE;--and-text:#085041;--but:#D85A30;--but-bg:#FAECE7;--but-text:#4A1B0C;--thr:#534AB7;--thr-bg:#EEEDFE;--thr-text:#26215C;--amber:#BA7517;--amber-bg:#FAEEDA;--amber-text:#412402;--accent:#1a1a18}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1a;--bg2:#252522;--bg3:#2e2e2b;--text:#e8e6de;--text2:#a8a69e;--text3:#6a6a64;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2)}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px}
+.shell{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem}
+.masthead{margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:0.5px solid var(--border)}
+.masthead h1{font-size:22px;font-weight:500;margin-bottom:4px}
+.masthead p{font-size:13px;color:var(--text3);line-height:1.5}
+.back-link{display:inline-block;font-size:12px;color:var(--thr-text);text-decoration:none;padding:4px 10px;border:0.5px solid var(--thr);border-radius:20px;margin-bottom:1rem;background:var(--thr-bg)}
+.panel-note{padding:14px 16px;border-radius:var(--radius);background:var(--thr-bg);border-left:3px solid var(--thr);font-size:13px;color:var(--thr-text);line-height:1.65;margin-bottom:1.5rem}
+.panel-note strong{font-weight:500}
+.def-box{padding:14px 16px;border-radius:var(--radius);background:var(--bg2);border-left:3px solid var(--border2);font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:1.5rem}
+.def-box strong{color:var(--text);font-weight:500}
+.primer{margin-bottom:2rem}
+.primer-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:10px}
+.primer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.primer-card{padding:12px 13px;border-radius:var(--radius);border:0.5px solid var(--border);background:var(--bg)}
+.primer-card-title{font-size:12px;font-weight:500;color:var(--text);margin-bottom:5px}
+.primer-card p{font-size:12px;color:var(--text2);line-height:1.45}
+.criterion{margin-bottom:2rem;padding:18px 18px 14px;border-radius:var(--radius-lg);border:0.5px solid var(--border);background:var(--bg)}
+.criterion-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.criterion-info{flex:1}
+.criterion-num{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:3px}
+.criterion-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:2px}
+.criterion-pts{font-size:12px;color:var(--text3)}
+.score-widget{flex-shrink:0;text-align:center}
+.score-display{font-size:28px;font-weight:500;color:var(--text);line-height:1;margin-bottom:2px}
+.score-max{font-size:11px;color:var(--text3)}
+.score-row{display:flex;gap:4px;margin:8px 0 12px;flex-wrap:wrap}
+.score-btn{width:36px;height:36px;border-radius:var(--radius);border:0.5px solid var(--border);background:var(--bg2);color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;transition:background .1s,color .1s;display:flex;align-items:center;justify-content:center}
+.score-btn:hover{border-color:var(--border2);background:var(--bg3)}
+.score-btn.selected{background:var(--accent);color:var(--bg);border-color:transparent}
+.probe-q{font-size:13px;color:var(--text);line-height:1.65;margin-bottom:8px;padding:10px 13px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--bg2)}
+.probe-q em{color:var(--text3);font-style:italic;font-size:12px}
+.probe-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px}
+textarea{width:100%;min-height:75px;padding:10px 13px;font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);resize:vertical;line-height:1.6;transition:border-color .15s}
+textarea:focus{outline:none;border-color:var(--accent)}
+textarea::placeholder{color:var(--text3);font-style:italic;font-size:12px}
+.score-label-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:8px}
+.total-bar{position:sticky;bottom:0;background:var(--bg);border-top:0.5px solid var(--border);padding:12px 0;margin-top:2rem;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.total-score{font-size:22px;font-weight:500;color:var(--text)}
+.total-label{font-size:12px;color:var(--text3)}
+.btn{padding:9px 18px;font-size:13px;font-family:inherit;border-radius:var(--radius);cursor:pointer;font-weight:500;transition:opacity .15s;border:0.5px solid var(--border2);background:var(--bg);color:var(--text)}
+.btn:hover{opacity:.8}
+.btn-export{background:var(--thr-bg);color:var(--thr-text);border-color:var(--thr)}
+.export-panel{display:none;margin-top:1.5rem;padding:16px;border-radius:var(--radius-lg);border:0.5px solid var(--border2);background:var(--bg2)}
+.export-panel.visible{display:block}
+.export-panel h3{font-size:14px;font-weight:500;margin-bottom:10px}
+.export-text{width:100%;min-height:320px;padding:12px;font-size:12px;font-family:'Courier New',monospace;color:var(--text);background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);resize:vertical;line-height:1.6}
+.copy-confirm{display:none;font-size:12px;color:var(--and);margin-top:6px;font-weight:500}
+.overall-section{margin-bottom:2rem;padding:18px;border-radius:var(--radius-lg);border:0.5px solid var(--thr);background:var(--thr-bg)}
+.overall-section h3{font-size:15px;font-weight:500;color:var(--thr-text);margin-bottom:10px}
+@media(max-width:600px){.primer-grid{grid-template-columns:1fr}.criterion-header{flex-direction:column}.score-widget{width:100%}.score-row{justify-content:flex-start}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div class="masthead">
+  <a class="back-link" href="index.html">← All tools</a>
+  <h1>Test drive your research — peer reviewer</h1>
+  <p>You are learning to evaluate research design logic. This is the same skill a proposal panel uses. Your feedback should be reasoned, specific, and useful to the presenter.</p>
+</div>
+
+<div class="panel-note"><strong>What you are doing here:</strong> A research proposal panel does not just score a study — it evaluates whether the logic holds. You are practising that same evaluative move. Before you score any criterion, you are asked to reason through it. The score follows the reasoning, not the other way around. Your review is anonymous. It counts toward your grade — and it prepares you for your own panel.</div>
+
+<div class="def-box"><strong>What you are evaluating:</strong> Structural and conceptual alignment — whether the researcher has intentionally negotiated the flow from PPSQ through conceptual framework to research design, and whether that flow is logically coherent and justified at each step.</div>
+
+<div class="primer">
+  <div class="primer-title">Brief methodological orientation — before you review</div>
+  <div class="primer-grid">
+    <div class="primer-card"><div class="primer-card-title">Qualitative</div><p>Concerned with meaning and interpretation. Valid when the research questions ask how or why something occurs. Look for: consistency between interpretive claims and the data sources used.</p></div>
+    <div class="primer-card"><div class="primer-card-title">Document analysis</div><p>Uses existing texts or records as data. Valid when the phenomenon is embedded in documented evidence. Look for: clear criteria for document selection and a defined analytical approach.</p></div>
+    <div class="primer-card"><div class="primer-card-title">Mixed methods</div><p>Combines qualitative and quantitative approaches. Valid only when neither approach alone can answer the research questions. Look for: explicit justification for combining, not just using both.</p></div>
+  </div>
+</div>
+
+<!-- Criterion 1 -->
+<div class="criterion">
+  <div class="criterion-header">
+    <div class="criterion-info">
+      <div class="criterion-num">Criterion 1</div>
+      <div class="criterion-title">Is the PPSQ convincingly laid out?</div>
+      <div class="criterion-pts">5 points</div>
+    </div>
+    <div class="score-widget">
+      <div class="score-display" id="d1">—</div>
+      <div class="score-max">/ 5</div>
+    </div>
+  </div>
+  <div class="probe-q">Before scoring: Can you identify a clear purpose statement with a deliberate analytical verb? Is there a problem statement that establishes context, gap, and stakes? Are the research questions specific and investigable? <em>(You are not evaluating whether you agree with the topic — you are evaluating whether the PPSQ is clearly and coherently stated.)</em></div>
+  <div class="score-label-row"><span>0 Unacceptable</span><span>5 Excellent</span></div>
+  <div class="score-row" id="r1"></div>
+  <div class="probe-label">Your comment (2–3 sentences)</div>
+  <textarea id="c1" placeholder="The PPSQ is / is not convincingly laid out because... The purpose verb [name it] signals... The research questions [are / are not] clearly investigable because..."></textarea>
+</div>
+
+<!-- Criterion 2 -->
+<div class="criterion">
+  <div class="criterion-header">
+    <div class="criterion-info">
+      <div class="criterion-num">Criterion 2</div>
+      <div class="criterion-title">Is there a rational and logical flow to the elements of the PPSQ?</div>
+      <div class="criterion-pts">5 points</div>
+    </div>
+    <div class="score-widget">
+      <div class="score-display" id="d2">—</div>
+      <div class="score-max">/ 5</div>
+    </div>
+  </div>
+  <div class="probe-q">Before scoring: Does the purpose statement lead logically to the problem statement? Do the research questions follow from the problem — or do they introduce new elements not established in the problem? Is each element building on the previous one? <em>(Flow means each element earns its place by being necessary to what comes next.)</em></div>
+  <div class="score-label-row"><span>0 Unacceptable</span><span>5 Excellent</span></div>
+  <div class="score-row" id="r2"></div>
+  <div class="probe-label">Your comment (2–3 sentences)</div>
+  <textarea id="c2" placeholder="The flow between [element] and [element] is [strong / weak] because... The point where the logic breaks down or holds most strongly is..."></textarea>
+</div>
+
+<!-- Criterion 3 -->
+<div class="criterion">
+  <div class="criterion-header">
+    <div class="criterion-info">
+      <div class="criterion-num">Criterion 3</div>
+      <div class="criterion-title">Is the problem statement convincing?</div>
+      <div class="criterion-pts">5 points</div>
+    </div>
+    <div class="score-widget">
+      <div class="score-display" id="d3">—</div>
+      <div class="score-max">/ 5</div>
+    </div>
+  </div>
+  <div class="probe-q">Before scoring: Does the problem statement make a case for why this study is necessary — or does it only describe a situation? Is there an identifiable knowledge gap? Are the intellectual stakes clear? <em>(A convincing problem statement argues that something is not yet known or understood, and that this matters. A weak one describes a social issue without establishing an intellectual problem.)</em></div>
+  <div class="score-label-row"><span>0 Unacceptable</span><span>5 Excellent</span></div>
+  <div class="score-row" id="r3"></div>
+  <div class="probe-label">Your comment (2–3 sentences)</div>
+  <textarea id="c3" placeholder="The problem statement [does / does not] establish a clear knowledge gap because... The intellectual stakes are [clear / unclear] because... What would strengthen it is..."></textarea>
+</div>
+
+<!-- Criterion 4 -->
+<div class="criterion">
+  <div class="criterion-header">
+    <div class="criterion-info">
+      <div class="criterion-num">Criterion 4</div>
+      <div class="criterion-title">Is the basis of the proposal strong from the outline of literature?</div>
+      <div class="criterion-pts">10 points</div>
+    </div>
+    <div class="score-widget">
+      <div class="score-display" id="d4">—</div>
+      <div class="score-max">/ 10</div>
+    </div>
+  </div>
+  <div class="probe-q">Before scoring: Does the literature outline show a dialectical progression — establishing what is known (AND), identifying where it breaks down (BUT), and indicating what direction the study takes (THEREFORE)? Are the key concepts grounded in the literature and given contextual meaning? Is there a clearly identified gap that the proposed study addresses? <em>(A strong literature basis is not a list of summaries. It is an argument built from sources.)</em></div>
+  <div class="score-label-row"><span>0 Unacceptable</span><span>9–10 Excellent</span></div>
+  <div class="score-row" id="r4" data-max="10"></div>
+  <div class="probe-label">Your comment (2–3 sentences)</div>
+  <textarea id="c4" placeholder="The literature outline [does / does not] build a dialectical argument because... The AND-BUT-THEREFORE progression is [evident / absent / partial] because... The key concepts are [well grounded / superficially stated] because..."></textarea>
+</div>
+
+<!-- Criterion 5 -->
+<div class="criterion">
+  <div class="criterion-header">
+    <div class="criterion-info">
+      <div class="criterion-num">Criterion 5</div>
+      <div class="criterion-title">Does the research design follow a logical flow?</div>
+      <div class="criterion-pts">5 points</div>
+    </div>
+    <div class="score-widget">
+      <div class="score-display" id="d5">—</div>
+      <div class="score-max">/ 5</div>
+    </div>
+  </div>
+  <div class="probe-q">Before scoring: Identify the methodology the presenter has chosen. Does it follow logically from the research questions — or has it been chosen for convenience? Does the conceptual framework connect to the methodological approach? <em>(Logical flow in research design means each decision is justified by what precedes it, not by what is available or familiar.)</em></div>
+  <div class="score-label-row"><span>0 Unacceptable</span><span>5 Excellent</span></div>
+  <div class="score-row" id="r5"></div>
+  <div class="probe-label">Your comment (2–3 sentences)</div>
+  <textarea id="c5" placeholder="The presenter has chosen [methodology]. This [does / does not] follow logically from the research questions because... The link between the conceptual framework and the design is [strong / weak] because..."></textarea>
+</div>
+
+<!-- Criterion 6 -->
+<div class="criterion">
+  <div class="criterion-header">
+    <div class="criterion-info">
+      <div class="criterion-num">Criterion 6</div>
+      <div class="criterion-title">Do the proposed data collection methods support the research design?</div>
+      <div class="criterion-pts">5 points</div>
+    </div>
+    <div class="score-widget">
+      <div class="score-display" id="d6">—</div>
+      <div class="score-max">/ 5</div>
+    </div>
+  </div>
+  <div class="probe-q">Before scoring: Are the data collection methods consistent with the stated methodology? Does each method produce the kind of data the study needs? For secondary data studies: are the documents or datasets appropriate proxies for the concepts being investigated? <em>(Methods that are inconsistent with the methodology signal that the design has not been thought through as a whole.)</em></div>
+  <div class="score-label-row"><span>0 Unacceptable</span><span>5 Excellent</span></div>
+  <div class="score-row" id="r6"></div>
+  <div class="probe-label">Your comment (2–3 sentences)</div>
+  <textarea id="c6" placeholder="The data collection methods [are / are not] consistent with the stated methodology because... The methods will produce [type of data] which [is / is not] appropriate for the research questions because..."></textarea>
+</div>
+
+<!-- Criterion 7 -->
+<div class="criterion">
+  <div class="criterion-header">
+    <div class="criterion-info">
+      <div class="criterion-num">Criterion 7</div>
+      <div class="criterion-title">Are the data appropriate to assisting to answer the research questions?</div>
+      <div class="criterion-pts">5 points</div>
+    </div>
+    <div class="score-widget">
+      <div class="score-display" id="d7">—</div>
+      <div class="score-max">/ 5</div>
+    </div>
+  </div>
+  <div class="probe-q">Before scoring: For each research question, ask whether the identified data sources could plausibly produce evidence that addresses it. Are there research questions that no data source speaks to? Are there data sources that do not connect to any research question? <em>(Misalignment between data and questions is one of the most common weaknesses in research proposals. Look for it specifically.)</em></div>
+  <div class="score-label-row"><span>0 Unacceptable</span><span>5 Excellent</span></div>
+  <div class="score-row" id="r7"></div>
+  <div class="probe-label">Your comment (2–3 sentences)</div>
+  <textarea id="c7" placeholder="The data [are / are not] appropriate to answering the research questions because... RQ[X] [can / cannot] be investigated with the identified sources because... A gap I notice is..."></textarea>
+</div>
+
+<!-- Criterion 8 -->
+<div class="criterion">
+  <div class="criterion-header">
+    <div class="criterion-info">
+      <div class="criterion-num">Criterion 8</div>
+      <div class="criterion-title">Are ethical dimensions considered and well justified?</div>
+      <div class="criterion-pts">5 points</div>
+    </div>
+    <div class="score-widget">
+      <div class="score-display" id="d8">—</div>
+      <div class="score-max">/ 5</div>
+    </div>
+  </div>
+  <div class="probe-q">Before scoring: Are the ethical considerations specific to this study — or generic? Has the presenter identified the actual risks their design creates and explained how they will address them? Does the ethical discussion show awareness of the study's specific context, data, and subjects? <em>(Generic ethics sections — "I will maintain confidentiality and anonymity" without context — score low. Specific, justified ethical reasoning scores high.)</em></div>
+  <div class="score-label-row"><span>0 Unacceptable</span><span>5 Excellent</span></div>
+  <div class="score-row" id="r8"></div>
+  <div class="probe-label">Your comment (2–3 sentences)</div>
+  <textarea id="c8" placeholder="The ethical considerations [are / are not] specific to this study because... The presenter [has / has not] justified their ethical approach because... What is missing or underdeveloped is..."></textarea>
+</div>
+
+<!-- Criterion 9 -->
+<div class="criterion">
+  <div class="criterion-header">
+    <div class="criterion-info">
+      <div class="criterion-num">Criterion 9</div>
+      <div class="criterion-title">Is the referencing appropriate and does it demonstrate research integrity?</div>
+      <div class="criterion-pts">5 points</div>
+    </div>
+    <div class="score-widget">
+      <div class="score-display" id="d9">—</div>
+      <div class="score-max">/ 5</div>
+    </div>
+  </div>
+  <div class="probe-q">Before scoring: Are sources cited consistently and in a recognised referencing format? Are claims attributed to specific sources — or are there unsupported generalisations? Does the referencing suggest the presenter has engaged with the literature directly, or does it feel superficial? <em>(Research integrity here means: are the references doing real intellectual work, or are they decorative?)</em></div>
+  <div class="score-label-row"><span>0 Unacceptable</span><span>5 Excellent</span></div>
+  <div class="score-row" id="r9"></div>
+  <div class="probe-label">Your comment (2–3 sentences)</div>
+  <textarea id="c9" placeholder="The referencing [is / is not] consistent and appropriately formatted because... The sources [are / are not] doing real intellectual work because... Research integrity is [evident / questionable] because..."></textarea>
+</div>
+
+<!-- Overall -->
+<div class="overall-section">
+  <h3>Overall reflection</h3>
+  <div class="probe-q" style="background:var(--bg)">Having reviewed all nine criteria: what is the single strongest element of this proposal, and what is the single most important thing the presenter should address before their panel? <em>(Be specific. Naming "the literature review" is not specific enough. Name the specific gap or strength within it.)</em></div>
+  <textarea id="c-overall" placeholder="The strongest element of this proposal is [specific element] because...&#10;&#10;The most important thing to address before panel is [specific issue] because... A concrete suggestion for addressing this would be..."></textarea>
+</div>
+
+<div class="total-bar">
+  <div>
+    <div class="total-label">Total score</div>
+    <div class="total-score"><span id="total-score">0</span> / 50</div>
+  </div>
+  <button class="btn btn-export" onclick="buildExport()">Export my review ↓</button>
+</div>
+
+<div class="export-panel" id="export-panel">
+  <h3>Your peer review — copy into your submission</h3>
+  <textarea class="export-text" id="export-text" readonly></textarea>
+  <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+    <button class="btn" style="background:var(--accent);color:var(--bg);border-color:transparent" onclick="copyExport()">Copy to clipboard</button>
+    <span class="copy-confirm" id="copy-confirm">Copied.</span>
+  </div>
+</div>
+
+</div>
+<script>
+const maxScores={r1:5,r2:5,r3:5,r4:10,r5:5,r6:5,r7:5,r8:5,r9:5};
+const scores={};
+
+function buildScoreRow(rowId,max){
+  const row=document.getElementById(rowId);
+  if(!row)return;
+  for(let i=0;i<=max;i++){
+    const btn=document.createElement('button');
+    btn.className='score-btn';
+    btn.textContent=i;
+    const num=parseInt(rowId.replace('r',''));
+    btn.onclick=()=>setScore(rowId,num,i,max);
+    row.appendChild(btn);
+  }
+}
+
+function setScore(rowId,num,val,max){
+  scores[num]=val;
+  document.getElementById('d'+num).textContent=val;
+  document.querySelectorAll('#'+rowId+' .score-btn').forEach((btn,i)=>{
+    btn.classList.toggle('selected',i===val);
+  });
+  updateTotal();
+}
+
+function updateTotal(){
+  let total=0;
+  for(let i=1;i<=9;i++){if(scores[i]!==undefined)total+=scores[i];}
+  document.getElementById('total-score').textContent=total;
+}
+
+function g(id){const e=document.getElementById(id);return e?e.value.trim():''}
+
+function buildExport(){
+  const criteria=[
+    [1,'Is the PPSQ convincingly laid out?',5],
+    [2,'Is there a rational and logical flow to the elements of the PPSQ?',5],
+    [3,'Is the problem statement convincing?',5],
+    [4,'Is the basis of the proposal strong from the outline of literature?',10],
+    [5,'Does the research design follow a logical flow?',5],
+    [6,'Do the proposed data collection methods support the research design?',5],
+    [7,'Are the data appropriate to assisting to answer the research questions?',5],
+    [8,'Are ethical dimensions considered and well justified?',5],
+    [9,'Is the referencing appropriate and does it demonstrate research integrity?',5],
+  ];
+  const line='─'.repeat(60);
+  let total=0;
+  let out='PEER REVIEW — TEST DRIVE YOUR RESEARCH\n';
+  out+=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+'\n';
+  out+=line+'\n\n';
+  criteria.forEach(([num,title,max])=>{
+    const s=scores[num]!==undefined?scores[num]:'not scored';
+    if(typeof s==='number')total+=s;
+    out+='CRITERION '+num+': '+title.toUpperCase()+'\n';
+    out+='Score: '+s+' / '+max+'\n';
+    out+=(g('c'+num)||'[no comment provided]')+'\n\n';
+  });
+  out+=line+'\n';
+  out+='TOTAL SCORE: '+total+' / 50\n\n';
+  out+='OVERALL REFLECTION\n'+line+'\n';
+  out+=(g('c-overall')||'[not completed]')+'\n';
+  document.getElementById('export-text').value=out;
+  document.getElementById('export-panel').classList.add('visible');
+  document.getElementById('export-panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function copyExport(){
+  const ta=document.getElementById('export-text');ta.select();document.execCommand('copy');
+  const c=document.getElementById('copy-confirm');c.style.display='inline';
+  setTimeout(()=>{c.style.display='none';},2500);
+}
+
+Object.keys(maxScores).forEach(rowId=>{
+  buildScoreRow(rowId,maxScores[rowId]);
+});
+</script>
+</body>
+</html>
