@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masters Research Thinking Tool</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f4f0;
+    --bg3: #eceae4;
+    --text: #1a1a18;
+    --text2: #5a5a56;
+    --text3: #9a9a94;
+    --border: rgba(0,0,0,0.12);
+    --border2: rgba(0,0,0,0.22);
+    --radius: 8px;
+    --radius-lg: 12px;
+    --and: #1D9E75;
+    --and-bg: #E1F5EE;
+    --and-text: #085041;
+    --but: #D85A30;
+    --but-bg: #FAECE7;
+    --but-text: #4A1B0C;
+    --thr: #534AB7;
+    --thr-bg: #EEEDFE;
+    --thr-text: #26215C;
+    --accent: #1a1a18;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg2: #252522;
+      --bg3: #2e2e2b;
+      --text: #e8e6de;
+      --text2: #a8a69e;
+      --text3: #6a6a64;
+      --border: rgba(255,255,255,0.1);
+      --border2: rgba(255,255,255,0.2);
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  .shell {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .masthead {
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .masthead h1 {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .masthead p {
+    font-size: 13px;
+    color: var(--text3);
+  }
+
+  .progress {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+    margin-bottom: 2rem;
+  }
+
+  .ps {
+    padding: 10px 6px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text3);
+    cursor: pointer;
+    background: var(--bg2);
+    border-right: 0.5px solid var(--border);
+    transition: background .15s, color .15s;
+    user-select: none;
+    line-height: 1.3;
+  }
+
+  .ps:last-child { border-right: none; }
+  .ps:hover { background: var(--bg3); color: var(--text2); }
+  .ps.active { background: var(--bg); color: var(--text); font-weight: 500; }
+  .ps.done { color: var(--text3); }
+  .ps.done::before { content: "✓ "; color: var(--and); }
+
+  .stage { display: none; }
+  .stage.active { display: block; }
+
+  .stage-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 4px;
+  }
+
+  .stage-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .stage-purpose {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.65;
+    padding: 12px 16px;
+    background: var(--bg2);
+    border-radius: var(--radius);
+    border-left: 2.5px solid var(--border2);
+    margin-bottom: 1.5rem;
+  }
+
+  .order-note {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.65;
+    padding: 12px 16px;
+    background: var(--thr-bg);
+    border-radius: var(--radius);
+    border-left: 2.5px solid var(--thr);
+    margin-bottom: 1.5rem;
+  }
+
+  .order-note strong { color: var(--thr-text); }
+
+  .probe-group { margin-bottom: 1.5rem; }
+
+  .probe-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .bc { background: var(--bg2); color: var(--text2); border: 0.5px solid var(--border2); }
+  .ba { background: var(--and-bg); color: var(--and-text); }
+  .bb { background: var(--but-bg); color: var(--but-text); }
+  .bt { background: var(--thr-bg); color: var(--thr-text); }
+
+  .probe-q {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.65;
+    margin-bottom: 8px;
+    padding: 10px 13px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+  }
+
+  .probe-q em { color: var(--text3); font-style: italic; font-size: 12px; }
+
+  textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: 10px 13px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--bg);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    resize: vertical;
+    line-height: 1.6;
+    transition: border-color .15s;
+  }
+
+  textarea:focus { outline: none; border-color: var(--accent); }
+  textarea::placeholder { color: var(--text3); font-style: italic; font-size: 12px; }
+
+  .abt-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 1rem 0 1.5rem;
+  }
+
+  .abt-cell {
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border);
+  }
+
+  .abt-cell.and { border-left: 3px solid var(--and); }
+  .abt-cell.but { border-left: 3px solid var(--but); }
+  .abt-cell.thr { border-left: 3px solid var(--thr); }
+
+  .abt-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 4px;
+  }
+
+  .abt-cell.and .abt-label { color: var(--and); }
+  .abt-cell.but .abt-label { color: var(--but); }
+  .abt-cell.thr .abt-label { color: var(--thr); }
+  .abt-cell p { font-size: 12px; color: var(--text2); line-height: 1.45; }
+
+  .verb-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 1rem 0;
+  }
+
+  .vcard {
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border);
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+
+  .vcard:hover { border-color: var(--border2); background: var(--bg2); }
+  .vcard.selected { border: 1.5px solid var(--accent); background: var(--bg2); }
+
+  .vcard.avoid {
+    opacity: .45;
+    cursor: default;
+  }
+
+  .vcard.avoid:hover { border-color: var(--border); background: transparent; }
+
+  .vverb {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .vcard.avoid .vverb {
+    text-decoration: line-through;
+    color: var(--text3);
+  }
+
+  .vdesc { font-size: 12px; color: var(--text2); line-height: 1.45; }
+  .vcommit { font-size: 11px; color: var(--text3); margin-top: 5px; font-style: italic; }
+  .avoid-tag { font-size: 11px; color: var(--but); font-weight: 500; margin-top: 4px; }
+
+  .rq-guide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 1rem 0;
+  }
+
+  .rq-col {
+    padding: 10px 13px;
+    border-radius: var(--radius);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .rq-yes { background: var(--and-bg); border: 0.5px solid #9FE1CB; color: var(--and-text); }
+  .rq-no { background: var(--but-bg); border: 0.5px solid #F5C4B3; color: var(--but-text); }
+
+  .rq-col strong {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: 5px;
+  }
+
+  .nav-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 2rem;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1.25rem;
+    border-top: 0.5px solid var(--border);
+  }
+
+  .btn {
+    padding: 9px 18px;
+    font-size: 13px;
+    font-family: inherit;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 500;
+    transition: opacity .15s, background .15s;
+    border: 0.5px solid var(--border2);
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .btn:hover { opacity: .8; }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: transparent;
+  }
+
+  .btn-export {
+    background: var(--thr-bg);
+    color: var(--thr-text);
+    border-color: var(--thr);
+  }
+
+  .btn:disabled { opacity: .3; cursor: default; }
+
+  .syn-box {
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border);
+    background: var(--bg2);
+    margin-top: 1.25rem;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+
+  .syn-box strong { color: var(--text); font-weight: 500; }
+
+  .syn-line { margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--border); }
+  .syn-line:first-of-type { margin-top: 6px; padding-top: 6px; }
+
+  .export-panel {
+    display: none;
+    margin-top: 1.5rem;
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    border: 0.5px solid var(--border2);
+    background: var(--bg2);
+  }
+
+  .export-panel.visible { display: block; }
+
+  .export-panel h3 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  .export-text {
+    width: 100%;
+    min-height: 280px;
+    padding: 12px;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    color: var(--text);
+    background: var(--bg);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  .copy-confirm {
+    display: none;
+    font-size: 12px;
+    color: var(--and);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  .note-small { font-size: 12px; color: var(--text3); font-style: italic; }
+
+  @media (max-width: 600px) {
+    .progress { grid-template-columns: repeat(3, 1fr); }
+    .ps:nth-child(3) { border-right: none; }
+    .ps:nth-child(4) { border-top: 0.5px solid var(--border); }
+    .abt-grid { grid-template-columns: 1fr; }
+    .verb-grid { grid-template-columns: 1fr; }
+    .rq-guide { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="masthead">
+    <h1>Masters research thinking tool</h1>
+    <p>Work through each stage in order. The PPSQ is written last — after the thinking is done.</p>
+  </div>
+
+  <div class="progress" id="progress">
+    <div class="ps active" onclick="goTo(0)">1. Provocation</div>
+    <div class="ps" onclick="goTo(1)">2. Who says so</div>
+    <div class="ps" onclick="goTo(2)">3. AND</div>
+    <div class="ps" onclick="goTo(3)">4. BUT</div>
+    <div class="ps" onclick="goTo(4)">5. THEREFORE</div>
+    <div class="ps" onclick="goTo(5)">6. PPSQ</div>
+  </div>
+
+  <!-- STAGE 0 -->
+  <div class="stage active" id="stage-0">
+    <div class="stage-label">Module 1 — Problem constitution</div>
+    <div class="stage-title">The social provocation</div>
+    <div class="stage-purpose">You are not writing yet. You are thinking out loud about a situation that concerns you. The task here is to establish whether this is a researchable intellectual problem — not just a social issue worth caring about.</div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bc">Situation</span> What is actually happening, and where?</div>
+      <div class="probe-q">Describe the situation in plain language — not academic prose. What is occurring, in what context, and what makes it visible as a problem? <em>(Write this as you would explain it to a non-expert. Avoid policy language at this stage.)</em></div>
+      <textarea id="t0a" placeholder="e.g. The Madlanga Commission was established to investigate X. Two years after its report, its recommendations remain largely unimplemented and the conditions it was meant to address persist..."></textarea>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bc">Problem constitution</span> Who says this is a problem — and from what position?</div>
+      <div class="probe-q">Not everyone agrees on what constitutes a problem, or why. Identify who has named this as a problem: is it government, civil society, academics, affected communities, international bodies? Do they agree on what the problem is, or do they frame it differently? <em>(This establishes that your problem has a social location — it did not arise from nowhere.)</em></div>
+      <textarea id="t0b" placeholder="e.g. Civil society organisations frame this as an accountability failure. Government actors describe it as a resource and capacity problem. Academic literature frames it as... These framings carry different implications for how the problem is investigated..."></textarea>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bc">Nature of the problem</span> What kind of problem is this?</div>
+      <div class="probe-q">Choose the most accurate description and explain why it fits. Is this primarily: a <strong>political problem</strong> (about power, interests, contestation), a <strong>systems failure</strong> (about institutional design, capacity, or dysfunction), or a <strong>genuinely debated problem in the literature</strong> (where scholars disagree about causes, mechanisms, or solutions)? <em>(You may find it is more than one. Name the dominant framing and explain why you are foregrounding it.)</em></div>
+      <textarea id="t0c" placeholder="e.g. This is primarily a debated problem in the literature, where accountability scholars disagree about whether non-implementation reflects political will deficits or institutional design failures. I am foregrounding the theoretical debate because..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <span class="note-small">Your responses are saved in this session only</span>
+      <button class="btn btn-primary" onclick="goTo(1)">Next: who has investigated this →</button>
+    </div>
+  </div>
+
+  <!-- STAGE 1 -->
+  <div class="stage" id="stage-1">
+    <div class="stage-label">Module 1 — Problem constitution continued</div>
+    <div class="stage-title">Scholars who have identified this problem</div>
+    <div class="stage-purpose">Before engaging the broader literature, identify three to four scholars who have specifically recognised and investigated the problem you are describing. This grounds your problem statement in the academic conversation rather than in your own observation alone.</div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bc">Problem sources</span> Who else has seen and investigated this problem?</div>
+      <div class="probe-q">Identify three to four sources. For each: name the author and year, state what problem they identified, and briefly describe how they investigated it — what context, what approach, what data or evidence. <em>(You are not summarising their findings yet. You are establishing that this problem has a scholarly history.)</em></div>
+      <textarea id="t1a" rows="6" placeholder="Source 1: [Author, year] identified this problem as... They investigated it by... in the context of...&#10;&#10;Source 2: [Author, year] identified it as... Their approach was...&#10;&#10;Source 3: ...&#10;&#10;Source 4: ..."></textarea>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bc">Agreement</span> Where do these scholars agree?</div>
+      <div class="probe-q">What do these sources share in common — in how they define the problem, what they take as causes, or what they identify as at stake? <em>(Agreement establishes the intellectual ground. It shows there is something solid to build from.)</em></div>
+      <textarea id="t1b" placeholder="These scholars broadly agree that... They share an assumption that... Their accounts converge on..."></textarea>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bc">Generative differences</span> Where do their approaches differ — and why does that matter?</div>
+      <div class="probe-q">Identify differences that are intellectually productive — where scholars use different frameworks, study different contexts, or reach different conclusions. Why are these differences generative rather than just contradictory? <em>(Generative differences are the seed of your BUT sources. They signal that the problem is genuinely unresolved.)</em></div>
+      <textarea id="t1c" placeholder="Where their approaches differ: Source 1 focuses on X while Source 3 foregrounds Y. This difference is generative because it suggests that the same problem manifests differently depending on... This matters for my study because..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(0)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(2)">Next: AND sources →</button>
+    </div>
+  </div>
+
+  <!-- STAGE 2 -->
+  <div class="stage" id="stage-2">
+    <div class="stage-label">Module 2 — Dialectical reading</div>
+    <div class="stage-title">AND: the foundational literature</div>
+    <div class="stage-purpose">AND sources establish the intellectual ground on which your argument stands — what the field knows, broadly agrees on, and takes as the starting point for further inquiry. You are not agreeing uncritically. You are building from them.</div>
+
+    <div class="abt-grid">
+      <div class="abt-cell and"><div class="abt-label">AND</div><p>What is established. The ground your argument stands on.</p></div>
+      <div class="abt-cell but"><div class="abt-label">BUT</div><p>Where that ground gives way. The tension that makes inquiry necessary.</p></div>
+      <div class="abt-cell thr"><div class="abt-label">THEREFORE</div><p>What direction the tension opens. What your study can do.</p></div>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge ba">AND</span> What does the established literature agree on?</div>
+      <div class="probe-q">Identify three to four AND sources. For each: what foundational claim does this source make? How does it support the intellectual case for your study? <em>(Read for argument, not summary. What does this source establish that your study depends on?)</em></div>
+      <textarea id="t2a" rows="5" placeholder="Source 1 (AND): [Author, year] establishes that... This is foundational because my study depends on this claim to argue that...&#10;&#10;Source 2 (AND): ..."></textarea>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge ba">AND — proxies</span> How did these sources investigate their claims?</div>
+      <div class="probe-q">For each AND source: what data, indicators, or measures did the authors use? How did they operationalise abstract concepts into investigable phenomena? <em>(A concept like "institutional accountability" cannot be measured directly. What did the authors use as a proxy, and what does that choice reveal about their assumptions?)</em></div>
+      <textarea id="t2b" placeholder="Source 1 operationalises [concept] using [proxy/data]. This works as a proxy because... The limitation or assumption built into this choice is...&#10;&#10;Source 2 operationalises..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(3)">Next: BUT sources →</button>
+    </div>
+  </div>
+
+  <!-- STAGE 3 -->
+  <div class="stage" id="stage-3">
+    <div class="stage-label">Module 2 — Dialectical reading</div>
+    <div class="stage-title">BUT: where the literature breaks down</div>
+    <div class="stage-purpose">BUT sources are the engine of your argument. Without genuine intellectual tension there is no case for your study. BUT sources do not simply disagree — they reveal where the foundational literature fails to account for something important.</div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bb">BUT</span> Where does the established literature fall short?</div>
+      <div class="probe-q">Identify three to four BUT sources. For each: what does this source reveal that the AND sources cannot account for? Does it challenge a foundational assumption, expose a gap in the evidence, show the framework does not travel to a different context, or demonstrate that findings do not hold under different conditions? <em>(The BUT is where you demonstrate that your study is necessary.)</em></div>
+      <textarea id="t3a" rows="5" placeholder="Source 1 (BUT): [Author, year] challenges the foundation by showing that... This creates tension with [AND source] because...&#10;&#10;Source 2 (BUT): In contexts like [X], [Author, year] demonstrates that the established framework breaks down because..."></textarea>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bb">Tension statement</span> State the core tension in two sentences.</div>
+      <div class="probe-q">If you cannot compress the AND/BUT tension into two sentences, the dialectical structure is not yet clear enough to write a problem statement. <em>Format: "The literature establishes [X]. However, [Y] demonstrates that this does not hold when [condition], which means the field currently cannot explain [Z]."</em></div>
+      <textarea id="t3b" style="min-height:70px" placeholder="The literature establishes that... However, [BUT source/s] show that this does not hold when... which means the field currently cannot explain..."></textarea>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bb">Scholarly positioning</span> Where is your study positioned in this debate?</div>
+      <div class="probe-q">Name at least two scholarly positions on this tension. Then explain where your study sits — are you resolving the tension, investigating it empirically, applying one side to a new context, or proposing a different framing? <em>(Your position is a reasoned intellectual stance grounded in the literature, not a personal opinion.)</em></div>
+      <textarea id="t3c" placeholder="Some scholars (X, Y) locate the problem in... Others (A, B) argue instead that... My study is positioned differently — I argue that both accounts miss... and that examining [your case] through [your lens] will show..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(2)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(4)">Next: THEREFORE →</button>
+    </div>
+  </div>
+
+  <!-- STAGE 4 -->
+  <div class="stage" id="stage-4">
+    <div class="stage-label">Module 2 — Dialectical reading</div>
+    <div class="stage-title">THEREFORE: what your study can contribute</div>
+    <div class="stage-purpose">THEREFORE is not a conclusion — it is a direction. These sources show what productive investigation of your tension looks like, and what kind of new knowledge your study can generate.</div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bt">THEREFORE</span> What sources point toward productive investigation?</div>
+      <div class="probe-q">Identify two to four THEREFORE sources. These might offer: a theoretical framework with tools for navigating the tension, empirical evidence from comparable contexts, or methodological approaches that open the question differently. <em>(THEREFORE sources do not have to solve the problem. They have to show that investigating it is worthwhile and feasible.)</em></div>
+      <textarea id="t4a" rows="5" placeholder="Source 1 (THEREFORE): [Author, year] offers [framework/approach] which provides tools for... This points toward productive investigation because...&#10;&#10;Source 2 (THEREFORE): Evidence from [comparable context] suggests that..."></textarea>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bt">Contribution claim</span> What will the field know after your study that it does not know now?</div>
+      <div class="probe-q">State your contribution claim precisely. This is not what you will do — it is what the field will gain. <em>(Avoid: "This study will contribute to understanding of X." Try instead: "This study will show whether [claim] holds in [context], and under what conditions — which the existing literature cannot yet account for.")</em></div>
+      <textarea id="t4b" placeholder="This study will contribute to the literature by showing... Specifically, it will establish whether [claim] holds in [context]. This matters because current scholarship cannot account for..."></textarea>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bt">Data sources</span> What secondary data will you use, and how does each connect to your questions?</div>
+      <div class="probe-q">For each data source: name it, explain how you will access it, and identify what concept or research question it operationalises. <em>(Data sources are proxies. Explain HOW each source stands in for a concept — what it makes visible and what it cannot show.)</em></div>
+      <textarea id="t4c" placeholder="Data source 1: [Name] — accessed via [where]. This operationalises [concept] by providing [type of evidence]. What it can show: ... What it cannot show: ...&#10;&#10;Data source 2: ..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(3)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(5)">Next: write the PPSQ →</button>
+    </div>
+  </div>
+
+  <!-- STAGE 5 -->
+  <div class="stage" id="stage-5">
+    <div class="stage-label">Module 3 — Synthesis</div>
+    <div class="stage-title">Writing the PPSQ</div>
+
+    <div class="order-note"><strong>Note on order:</strong> The PPSQ is read first by your supervisor, but it is written last by you. What you write here is a crystallisation of thinking you have already done — not a guess at what sounds academic. It should feel achievable now.</div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bc">Purpose verb</span> Choose your analytical verb deliberately</div>
+      <div class="probe-q">The verb in your purpose statement does methodological work. It signals your epistemological stance and commits you to a mode of inquiry. Choose one and be prepared to justify it to your supervisor.</div>
+
+      <div class="verb-grid">
+        <div class="vcard" onclick="selectVerb(this,'investigate')">
+          <div class="vverb">Investigate</div>
+          <div class="vdesc">Implies empirical inquiry — uncovering evidence about something not yet fully documented.</div>
+          <div class="vcommit">Commits to: evidence-finding, empirical orientation</div>
+        </div>
+        <div class="vcard" onclick="selectVerb(this,'examine')">
+          <div class="vverb">Examine</div>
+          <div class="vdesc">Implies applying a lens or framework. The thing exists; you are looking at it through a specific instrument.</div>
+          <div class="vcommit">Commits to: a defined theoretical frame applied to a case</div>
+        </div>
+        <div class="vcard" onclick="selectVerb(this,'analyse')">
+          <div class="vverb">Analyse</div>
+          <div class="vdesc">Implies decomposition — taking something apart to understand its components or relationships.</div>
+          <div class="vcommit">Commits to: a defined object and an explicit method of disaggregation</div>
+        </div>
+        <div class="vcard" onclick="selectVerb(this,'critically discuss')">
+          <div class="vverb">Critically discuss</div>
+          <div class="vdesc">Implies engaging competing positions and arriving at a reasoned judgement. Suits conceptual studies.</div>
+          <div class="vcommit">Commits to: taking a position, not just reporting findings</div>
+        </div>
+        <div class="vcard avoid">
+          <div class="vverb">Explore</div>
+          <div class="vdesc">Commits to nothing. Signals uncertainty about what kind of knowledge the study will produce.</div>
+          <div class="avoid-tag">Avoid at Masters level</div>
+        </div>
+        <div class="vcard avoid">
+          <div class="vverb">Assess / Evaluate</div>
+          <div class="vdesc">Implies criteria-based judgement against a standard. Specific to audit and evaluation methodology.</div>
+          <div class="avoid-tag">Only if your method is explicitly evaluative</div>
+        </div>
+      </div>
+
+      <textarea id="t5verb" placeholder="I have selected [verb] because it fits my study's mode of inquiry in the following way..."></textarea>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bc">Purpose statement</span> One sentence.</div>
+      <div class="probe-q"><em>Format: "The purpose of this study is to [analytical verb] [what] in [context] in order to [contribution]."</em></div>
+      <textarea id="t5a" style="min-height:60px" placeholder="The purpose of this study is to..."></textarea>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bc">Problem statement</span> Three to five sentences. No filler.</div>
+      <div class="probe-q">Draw directly on the thinking you have done: the social provocation, the scholarly framing, the AND/BUT tension, and the knowledge gap. Every sentence earns its place. <em>(Structure: context → what the literature establishes → where it falls short → what therefore remains unknown → why this matters.)</em></div>
+      <textarea id="t5b" rows="5" placeholder="[What is happening and where] [What the literature establishes] [Where it falls short or is contested] [What therefore remains unknown or unresolved] [Why this matters for scholarship and practice]"></textarea>
+    </div>
+
+    <div class="probe-group">
+      <div class="probe-label"><span class="badge bc">Research questions</span> Two to three questions only.</div>
+
+      <div class="rq-guide">
+        <div class="rq-col rq-yes"><strong>Use these verbs</strong>examine · analyse · investigate · trace · account for · understand · describe · explain</div>
+        <div class="rq-col rq-no"><strong>Avoid these</strong>to what extent · evaluate · assess · determine the impact · measure the effectiveness</div>
+      </div>
+
+      <div class="probe-q">For each question run this check: (a) Does it address the gap in the problem statement? (b) Is it investigable with your identified data sources? (c) Would answering it produce your stated contribution? <em>(If any answer is no, revise the question — not the check.)</em></div>
+      <textarea id="t5c" rows="4" placeholder="RQ1: [How / What / Why / Under what conditions]...&#10;RQ2: ...&#10;RQ3 (optional): ..."></textarea>
+    </div>
+
+    <div class="syn-box">
+      <strong>Your dialectical journey</strong>
+      <div class="syn-line" id="syn-and">AND — not yet completed</div>
+      <div class="syn-line" id="syn-but">BUT — not yet completed</div>
+      <div class="syn-line" id="syn-thr">THEREFORE — not yet completed</div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(4)">← Back</button>
+      <button class="btn btn-export" onclick="buildExport()">Export my responses ↓</button>
+    </div>
+
+    <div class="export-panel" id="export-panel">
+      <h3>Your responses — copy and paste into your submission document</h3>
+      <textarea class="export-text" id="export-text" readonly></textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+        <button class="btn btn-primary" onclick="copyExport()">Copy to clipboard</button>
+        <span class="copy-confirm" id="copy-confirm">Copied.</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  let cur = 0;
+
+  function goTo(n) {
+    document.getElementById('stage-' + cur).classList.remove('active');
+    document.querySelectorAll('.ps')[cur].classList.remove('active');
+    document.querySelectorAll('.ps')[cur].classList.add('done');
+    cur = n;
+    document.getElementById('stage-' + n).classList.add('active');
+    document.querySelectorAll('.ps')[n].classList.remove('done');
+    document.querySelectorAll('.ps')[n].classList.add('active');
+    window.scrollTo(0, 0);
+    updateSyn();
+  }
+
+  function selectVerb(el, v) {
+    document.querySelectorAll('.vcard:not(.avoid)').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('t5verb').placeholder = 'I have selected "' + v + '" because it fits my study\'s mode of inquiry in the following way...';
+  }
+
+  function g(id) {
+    const e = document.getElementById(id);
+    return e ? e.value.trim() : '';
+  }
+
+  function updateSyn() {
+    const a = g('t2a');
+    const b = g('t3b');
+    const t = g('t4b');
+    document.getElementById('syn-and').textContent = a.length > 40 ? 'AND — ' + a.substring(0, 120) + '...' : 'AND — not yet completed';
+    document.getElementById('syn-but').textContent = b.length > 40 ? 'BUT — ' + b.substring(0, 120) + '...' : 'BUT — not yet completed';
+    document.getElementById('syn-thr').textContent = t.length > 40 ? 'THEREFORE — ' + t.substring(0, 120) + '...' : 'THEREFORE — not yet completed';
+  }
+
+  function buildExport() {
+    const sections = [
+      ['SOCIAL PROVOCATION', g('t0a')],
+      ['PROBLEM CONSTITUTION — WHO SAYS SO', g('t0b')],
+      ['NATURE OF THE PROBLEM', g('t0c')],
+      ['SCHOLARS WHO IDENTIFIED THIS PROBLEM', g('t1a')],
+      ['WHERE SCHOLARS AGREE', g('t1b')],
+      ['GENERATIVE DIFFERENCES', g('t1c')],
+      ['AND — FOUNDATIONAL LITERATURE', g('t2a')],
+      ['AND — PROXIES AND OPERATIONALISATION', g('t2b')],
+      ['BUT — WHERE THE LITERATURE FALLS SHORT', g('t3a')],
+      ['TENSION STATEMENT', g('t3b')],
+      ['SCHOLARLY POSITIONING', g('t3c')],
+      ['THEREFORE — PRODUCTIVE INVESTIGATION', g('t4a')],
+      ['CONTRIBUTION CLAIM', g('t4b')],
+      ['DATA SOURCES', g('t4c')],
+      ['PURPOSE VERB JUSTIFICATION', g('t5verb')],
+      ['PURPOSE STATEMENT', g('t5a')],
+      ['PROBLEM STATEMENT', g('t5b')],
+      ['RESEARCH QUESTIONS', g('t5c')],
+    ];
+
+    const line = '─'.repeat(60);
+    let out = 'MASTERS RESEARCH THINKING TOOL — RESPONSE EXPORT\n';
+    out += new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + '\n';
+    out += line + '\n\n';
+
+    sections.forEach(([label, val]) => {
+      out += label + '\n' + line + '\n';
+      out += (val || '[not completed]') + '\n\n';
+    });
+
+    document.getElementById('export-text').value = out;
+    document.getElementById('export-panel').classList.add('visible');
+    document.getElementById('export-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function copyExport() {
+    const ta = document.getElementById('export-text');
+    ta.select();
+    document.execCommand('copy');
+    const c = document.getElementById('copy-confirm');
+    c.style.display = 'inline';
+    setTimeout(() => { c.style.display = 'none'; }, 2500);
+  }
+
+  document.querySelectorAll('textarea').forEach(t => t.addEventListener('input', updateSyn));
+</script>
+</body>
+</html>
