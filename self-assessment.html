@@ -325,20 +325,30 @@ textarea::placeholder{color:var(--text3);font-style:italic;font-size:12px}
     Complete the questions above to generate your diagnostic.
   </div>
 
+  <div style="margin-bottom:1rem;margin-top:1rem">
+    <label style="font-size:12px;font-weight:500;color:var(--text2);display:block;margin-bottom:6px">Your name or student number — required before submitting</label>
+    <input id="student-name" type="text" placeholder="e.g. Jane Dlamini or 123456" style="width:100%;max-width:360px;padding:9px 13px;font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);outline:none;transition:border-color .15s">
+  </div>
+
   <div class="btn-row">
     <button class="btn btn-diag" onclick="runDiagnostic()">Run diagnostic</button>
-    <button class="btn btn-export" onclick="buildExport()">Export my self-assessment ↓</button>
-    <a class="btn btn-primary" href="test-drive-builder.html">Proceed to Tool 2 →</a>
+    <button class="btn btn-export" onclick="buildExport()">Export for my records ↓</button>
+    <button class="btn btn-primary" id="submit-btn" onclick="submitToForm()">Submit to lecturer ↑</button>
+    <a class="btn" href="test-drive-builder.html" style="text-decoration:none">Proceed to Tool 3 →</a>
+  </div>
+
+  <div id="submit-confirm" style="display:none;font-size:13px;color:var(--and-text);background:var(--and-bg);padding:10px 14px;border-radius:var(--radius);margin-top:10px;border:0.5px solid var(--and)">
+    Your self-assessment has been submitted. You can now proceed to Tool 3.
   </div>
 
   <div class="export-panel" id="export-panel">
     <h3>Your self-assessment — for your own records</h3>
     <textarea class="export-text" id="export-text" readonly></textarea>
     <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
-      <button class="btn btn-primary" onclick="copyExport()">Copy to clipboard</button>
+      <button class="btn" onclick="copyExport()" style="background:var(--accent);color:var(--bg);border-color:transparent">Copy to clipboard</button>
       <span class="copy-confirm" id="copy-confirm">Copied.</span>
     </div>
-    <p style="font-size:12px;color:var(--text3);margin-top:8px;font-style:italic">This tool does not submit or store your responses. This export is for your own use only.</p>
+    <p style="font-size:12px;color:var(--text3);margin-top:8px;font-style:italic">This export is for your own records. Use the Submit button above to send your responses to your lecturer.</p>
   </div>
 </div>
 
@@ -394,6 +404,10 @@ function runDiagnostic(){
 }
 
 function buildExport(){
+  const line='─'.repeat(60);
+  let out='RESEARCH SELF-ASSESSMENT — IS YOUR ARGUMENT HOLDING?\n';
+  out+=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+'\n';
+  out+=line+'\n\n';
   const sections=[
     ['FAILURE MODE 1 — ALIGNMENT',''],
     ['Q1: RQ to problem statement connection',g('fm1-q1')],
@@ -420,10 +434,6 @@ function buildExport(){
     ['Q2: Tracing the argument through each element',g('fm5-q2')],
     ['Q3: What the field will be able to say when complete',g('fm5-q3')],
   ];
-  const line='─'.repeat(60);
-  let out='RESEARCH SELF-ASSESSMENT — IS YOUR ARGUMENT HOLDING?\n';
-  out+=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+'\n';
-  out+=line+'\n\n';
   sections.forEach(([label,val])=>{
     if(val===''){out+='\n'+label+'\n'+line+'\n\n';return;}
     out+=label+'\n';
@@ -438,6 +448,70 @@ function copyExport(){
   const ta=document.getElementById('export-text');ta.select();document.execCommand('copy');
   const c=document.getElementById('copy-confirm');c.style.display='inline';
   setTimeout(()=>{c.style.display='none';},2500);
+}
+
+function submitToForm(){
+  // Collect student name
+  const nameEl=document.getElementById('student-name');
+  const name=nameEl?nameEl.value.trim():'';
+  if(!name){
+    alert('Please enter your name or student number before submitting.');
+    return;
+  }
+
+  // Get diagnostic verdict text
+  const verdictEl=document.getElementById('verdict-box');
+  const verdict=verdictEl?verdictEl.textContent.trim():'';
+
+  // Build the Google Form prefill URL
+  // Each entry.XXXXXXXX maps to one form field in order
+  const base='https://docs.google.com/forms/d/e/1FAIpQLSc3-UEGZkUkkPQLYlT6Sece0LrXEtCc_nwSVoPAuEY9IvuUEQ/formResponse';
+
+  const fields={
+    'entry.1568788355': name,
+    'entry.1370700323': g('fm1-q1'),
+    'entry.671833534':  g('fm1-q2'),
+    'entry.1303298011': g('fm1-q3'),
+    'entry.1650145380': g('fm1-q4'),
+    'entry.1442967765': g('fm2-q1'),
+    'entry.248358189':  g('fm2-q2'),
+    'entry.526383208':  g('fm2-q3'),
+    'entry.2127931416': g('fm2-q4'),
+    'entry.1088363457': g('fm3-q1'),
+    'entry.1620185911': g('fm3-q2'),
+    'entry.725019226':  g('fm3-q3'),
+    'entry.1612355828': g('fm3-q4'),
+    'entry.1582148695': g('fm4-q1'),
+    'entry.1794571643': g('fm4-q2'),
+    'entry.1537712311': g('fm4-q3'),
+    'entry.876666674':  g('fm4-q4'),
+    'entry.584368551':  g('fm5-q1'),
+    'entry.701129667':  g('fm5-q2'),
+    'entry.1758236467': g('fm5-q3'),
+    'entry.269951960':  verdict,
+  };
+
+  // Build form body
+  const body=Object.entries(fields)
+    .map(([k,v])=>encodeURIComponent(k)+'='+encodeURIComponent(v||'[not completed]'))
+    .join('&');
+
+  // Submit via fetch (no-cors — Google Forms does not return a response but accepts the data)
+  fetch(base,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:body
+  }).then(()=>{
+    document.getElementById('submit-confirm').style.display='block';
+    document.getElementById('submit-btn').disabled=true;
+    document.getElementById('submit-btn').textContent='Submitted ✓';
+  }).catch(()=>{
+    // no-cors fetch always resolves even on error — show confirm regardless
+    document.getElementById('submit-confirm').style.display='block';
+    document.getElementById('submit-btn').disabled=true;
+    document.getElementById('submit-btn').textContent='Submitted ✓';
+  });
 }
 </script>
 </body>
