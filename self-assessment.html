@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Self-Assessment — Is Your Argument Holding?</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f5f4f0;--bg3:#eceae4;
+  --text:#1a1a18;--text2:#5a5a56;--text3:#9a9a94;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+  --radius:8px;--radius-lg:12px;
+  --and:#1D9E75;--and-bg:#E1F5EE;--and-text:#085041;
+  --but:#D85A30;--but-bg:#FAECE7;--but-text:#4A1B0C;
+  --thr:#534AB7;--thr-bg:#EEEDFE;--thr-text:#26215C;
+  --amber:#BA7517;--amber-bg:#FAEEDA;--amber-text:#412402;
+  --red:#C0392B;--red-bg:#FDEDEC;--red-text:#6E1B13;
+  --accent:#1a1a18
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1c1a;--bg2:#252522;--bg3:#2e2e2b;
+  --text:#e8e6de;--text2:#a8a69e;--text3:#6a6a64;
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2)
+}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px}
+.shell{max-width:780px;margin:0 auto;padding:2rem 1.5rem 5rem}
+.back-link{display:inline-block;font-size:12px;color:var(--thr-text);text-decoration:none;padding:4px 10px;border:0.5px solid var(--thr);border-radius:20px;margin-bottom:1.25rem;background:var(--thr-bg)}
+.masthead{margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:0.5px solid var(--border)}
+.masthead h1{font-size:22px;font-weight:500;margin-bottom:6px}
+.masthead p{font-size:13px;color:var(--text2);line-height:1.6;max-width:600px}
+.warning-box{padding:16px 18px;border-radius:var(--radius);background:var(--red-bg);border-left:3px solid var(--red);font-size:13px;color:var(--red-text);line-height:1.65;margin-bottom:2rem}
+.warning-box strong{font-weight:600}
+.failure-section{margin-bottom:3rem}
+.fs-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:1rem;padding-bottom:10px;border-bottom:0.5px solid var(--border)}
+.fs-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;margin-top:2px}
+.fs-info{}
+.fs-label{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px}
+.fs-title{font-size:17px;font-weight:500;color:var(--text)}
+.fs-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-top:4px}
+.fm1 .fs-num{background:var(--red-bg);color:var(--red-text)}
+.fm1 .fs-label{color:var(--red)}
+.fm1 .fs-header{border-bottom-color:rgba(192,57,43,0.2)}
+.fm2 .fs-num{background:var(--but-bg);color:var(--but-text)}
+.fm2 .fs-label{color:var(--but)}
+.fm2 .fs-header{border-bottom-color:rgba(216,90,48,0.2)}
+.fm3 .fs-num{background:var(--amber-bg);color:var(--amber-text)}
+.fm3 .fs-label{color:var(--amber)}
+.fm3 .fs-header{border-bottom-color:rgba(186,117,23,0.2)}
+.fm4 .fs-num{background:var(--thr-bg);color:var(--thr-text)}
+.fm4 .fs-label{color:var(--thr)}
+.fm4 .fs-header{border-bottom-color:rgba(83,74,183,0.2)}
+.fm5 .fs-num{background:var(--and-bg);color:var(--and-text)}
+.fm5 .fs-label{color:var(--and)}
+.fm5 .fs-header{border-bottom-color:rgba(29,158,117,0.2)}
+.diagnostic-q{margin-bottom:1.5rem}
+.dq-text{font-size:14px;color:var(--text);line-height:1.7;padding:12px 14px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--bg);margin-bottom:8px}
+.dq-text strong{font-weight:500}
+.dq-text em{color:var(--text3);font-style:italic;font-size:13px}
+.dq-probe{font-size:12px;color:var(--text3);padding:8px 12px;background:var(--bg2);border-radius:var(--radius);margin-bottom:8px;line-height:1.55;font-style:italic}
+.dq-probe::before{content:"If you cannot answer this: ";font-weight:500;font-style:normal;color:var(--red)}
+textarea{width:100%;min-height:80px;padding:10px 13px;font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);resize:vertical;line-height:1.6;transition:border-color .15s}
+textarea:focus{outline:none;border-color:var(--accent)}
+textarea::placeholder{color:var(--text3);font-style:italic;font-size:12px}
+.diagnostic-panel{margin-top:3rem;padding:20px;border-radius:var(--radius-lg);border:0.5px solid var(--border2);background:var(--bg2)}
+.dp-title{font-size:16px;font-weight:500;margin-bottom:6px}
+.dp-sub{font-size:13px;color:var(--text2);margin-bottom:1.25rem;line-height:1.55}
+.signal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
+.signal-card{padding:12px 14px;border-radius:var(--radius);border:0.5px solid var(--border)}
+.signal-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.signal-status{font-size:22px;font-weight:500;margin-bottom:3px}
+.signal-hint{font-size:12px;color:var(--text2);line-height:1.45}
+.sc-fm1 .signal-label{color:var(--red)}
+.sc-fm2 .signal-label{color:var(--but)}
+.sc-fm3 .signal-label{color:var(--amber)}
+.sc-fm4 .signal-label{color:var(--thr)}
+.verdict-box{padding:14px 16px;border-radius:var(--radius);font-size:13px;line-height:1.65;margin-bottom:1.25rem}
+.verdict-ready{background:var(--and-bg);border-left:3px solid var(--and);color:var(--and-text)}
+.verdict-partial{background:var(--amber-bg);border-left:3px solid var(--amber);color:var(--amber-text)}
+.verdict-notready{background:var(--red-bg);border-left:3px solid var(--red);color:var(--red-text)}
+.btn{padding:9px 18px;font-size:13px;font-family:inherit;border-radius:var(--radius);cursor:pointer;font-weight:500;transition:opacity .15s;border:0.5px solid var(--border2);background:var(--bg);color:var(--text)}
+.btn:hover{opacity:.8}
+.btn-primary{background:var(--accent);color:var(--bg);border-color:transparent}
+.btn-diag{background:var(--red-bg);color:var(--red-text);border-color:var(--red)}
+.btn-export{background:var(--thr-bg);color:var(--thr-text);border-color:var(--thr)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:1.5rem;padding-top:1.25rem;border-top:0.5px solid var(--border)}
+.export-panel{display:none;margin-top:1.5rem;padding:16px;border-radius:var(--radius-lg);border:0.5px solid var(--border2);background:var(--bg2)}
+.export-panel.visible{display:block}
+.export-panel h3{font-size:14px;font-weight:500;margin-bottom:10px}
+.export-text{width:100%;min-height:300px;padding:12px;font-size:12px;font-family:'Courier New',monospace;color:var(--text);background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);resize:vertical;line-height:1.6}
+.copy-confirm{display:none;font-size:12px;color:var(--and);margin-top:6px;font-weight:500}
+.note-small{font-size:12px;color:var(--text3);font-style:italic}
+.divider{height:0.5px;background:var(--border);margin:2.5rem 0}
+@media(max-width:500px){.signal-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<a class="back-link" href="index.html">← All tools</a>
+
+<div class="masthead">
+  <h1>Is your argument actually holding?</h1>
+  <p>This is a diagnostic self-assessment. It sits between developing your research thinking and testing your research design. Its purpose is to expose logical failures before they get embedded in your methodology. Answer every question as precisely as you can. Vague answers are the diagnosis.</p>
+</div>
+
+<div class="warning-box">
+  <strong>Before you start:</strong> These questions are deliberately difficult. They are not asking whether you have done the work — they are asking whether the work is sound. A student with genuine intellectual alignment will find these questions answerable, specific, and even satisfying to respond to. A student whose argument has gaps will find them uncomfortable. That discomfort is information. Use it before you move to Tool 2, not after.
+</div>
+
+<!-- FAILURE MODE 1: MISALIGNMENT -->
+<div class="failure-section fm1">
+  <div class="fs-header">
+    <div class="fs-num">1</div>
+    <div class="fs-info">
+      <div class="fs-label">Failure mode 1 — Misalignment</div>
+      <div class="fs-title">The chain is broken somewhere</div>
+      <div class="fs-desc">Elements of your PPSQ and design do not connect to each other. The purpose verb does not match the methodology. Research questions introduce concepts not in the problem statement. Data sources do not speak to the questions.</div>
+    </div>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">Take your first research question. Now take your problem statement. In two sentences — not more — explain how answering that question would resolve the specific intellectual problem you stated. Do not paraphrase either. Make the logical connection explicit.</div>
+    <div class="dq-probe">the connection does not exist, or you need more than two sentences to establish it, the question and the problem are not yet aligned.</div>
+    <textarea id="fm1-q1" placeholder="RQ1 addresses the problem statement because answering it would... This resolves the intellectual gap because..."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">Look at your purpose verb — investigate, examine, analyse, critically discuss. Now look at your proposed methodology. Do they belong to the same mode of inquiry? Name the verb, name the methodology, and justify in one sentence why they are compatible.</div>
+    <div class="dq-probe">you chose the verb for style and the methodology for convenience, and they are pulling in different directions.</div>
+    <textarea id="fm1-q2" placeholder="My purpose verb is [verb]. My methodology is [methodology]. These are compatible because..."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">List every concept that appears in your research questions. Now check your problem statement — does each of those concepts appear there too, or are they being introduced for the first time in the questions? Concepts that appear in questions but not in the problem statement are not yet grounded.</div>
+    <div class="dq-probe">you are introducing analytical machinery in the questions that the problem statement has not prepared the ground for.</div>
+    <textarea id="fm1-q3" placeholder="Concepts in my RQs: [list them]. Each appears in the problem statement at [location] because... Any that do not appear: [name them] — and this means I need to..."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">Take each data source you have identified. For each one, name the specific research question it speaks to and explain what kind of evidence it produces that is relevant to that question. If a data source cannot be linked to a specific research question, it does not belong in your study.</div>
+    <div class="dq-probe">you have data sources that feel relevant but do not connect to any specific question — which means the design has loose ends.</div>
+    <textarea id="fm1-q4" placeholder="Data source 1 → speaks to RQ[X] because it produces [type of evidence] that is relevant because...&#10;Data source 2 → speaks to RQ[X] because..."></textarea>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- FAILURE MODE 2: UNCONVINCING ARGUMENT -->
+<div class="failure-section fm2">
+  <div class="fs-header">
+    <div class="fs-num">2</div>
+    <div class="fs-info">
+      <div class="fs-label">Failure mode 2 — Unconvincing argument</div>
+      <div class="fs-title">You are describing, not arguing</div>
+      <div class="fs-desc">The problem statement describes a situation rather than arguing for an intellectual gap. The contribution claim is circular. The tension statement restates the AND rather than introducing genuine friction between ideas.</div>
+    </div>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">Read your problem statement aloud. At what point does it stop describing what is happening in the world and start arguing that something is not yet known or understood in the scholarship? If that transition does not happen, you do not have a problem statement — you have a situation report.</div>
+    <div class="dq-probe">every sentence describes a social condition. You have written about the world, not about the state of knowledge about the world.</div>
+    <textarea id="fm2-q1" placeholder="The transition from description to intellectual argument happens at [sentence/point] where I argue that... Before that point I am describing. After that point I am arguing because..."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">State your contribution claim in one sentence. Now remove the words "contribute," "understanding," "knowledge," and "field" from it. What is left? If nothing substantive remains, the claim is circular and needs to be rebuilt from the specific finding your study will produce.</div>
+    <div class="dq-probe">the contribution claim evaporates when you remove the generic academic vocabulary — which means it was never a claim, just a placeholder.</div>
+    <textarea id="fm2-q2" placeholder="My contribution claim stripped of generic language is: ... What my study will specifically show that is not currently known is..."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">Your problem statement should make a case that your study is necessary. Not useful, not interesting — necessary. Complete this sentence without using the word "important": "This study is necessary because without it, the field will continue to be unable to explain..." If you cannot complete it, the necessity of your study has not been established.</div>
+    <div class="dq-probe">you can explain why the topic matters in the world but not why the study is intellectually necessary — which means you have a justification for caring, not for researching.</div>
+    <textarea id="fm2-q3" placeholder="This study is necessary because without it, the field will continue to be unable to explain..."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">What is the single most vulnerable claim in your argument — the one a panel reviewer could most easily challenge? State the claim. Then state the strongest version of the challenge. Then explain how your study design addresses it.</div>
+    <div class="dq-probe">you cannot identify a vulnerable claim, which means you have not stress-tested your argument — or worse, the entire argument is vulnerable and you have not noticed.</div>
+    <textarea id="fm2-q4" placeholder="The most vulnerable claim in my argument is... The strongest challenge to it would be... My study addresses this by..."></textarea>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- FAILURE MODE 3: FALSE KNOWLEDGE GAP -->
+<div class="failure-section fm3">
+  <div class="fs-header">
+    <div class="fs-num">3</div>
+    <div class="fs-info">
+      <div class="fs-label">Failure mode 3 — False knowledge gap</div>
+      <div class="fs-title">The gap is in your reading, not in the literature</div>
+      <div class="fs-desc">You have identified a gap in what you have read, not a gap in what exists. The gap disappears the moment someone points you to three obvious sources. You have not read enough to know what is known.</div>
+    </div>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">Name the specific claim you are making about the knowledge gap. Now name at least three scholars who have written about your topic area and explain precisely why their work does not fill the gap you have identified. Not why it is different from your topic — why it specifically does not resolve your stated intellectual problem.</div>
+    <div class="dq-probe">you can name scholars in your area but cannot explain why their work leaves your specific gap open — which means you have not read them carefully enough to know what they actually argue.</div>
+    <textarea id="fm3-q1" placeholder="My knowledge gap claim is: ... Scholar 1 [Author, year] does not fill this gap because their work addresses [X] but not [Y]... Scholar 2... Scholar 3..."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">Has your topic been studied in a comparable context — a different country, institution, sector, or time period? If yes: what did those studies find, and why do their findings not transfer to your context? If no: why has no comparable study been done, and what does that absence tell you about the state of the field?</div>
+    <div class="dq-probe">you have not looked for comparable studies, which means the gap you have identified may already be filled elsewhere and you have not checked.</div>
+    <textarea id="fm3-q2" placeholder="Comparable studies include [author, context, year] which found... These findings do not transfer to my context because... OR: No comparable study exists because..."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">Is your knowledge gap a gap in empirical evidence, a gap in theoretical explanation, a gap in contextual application, or a gap in methodological approach? Name which type it is and explain why that classification matters for how your study is designed to fill it.</div>
+    <div class="dq-probe">you cannot classify the type of gap, which means you have not been precise enough about what kind of knowledge your study will actually produce.</div>
+    <textarea id="fm3-q3" placeholder="My knowledge gap is a gap in [empirical evidence / theoretical explanation / contextual application / methodological approach] because... This classification matters for my design because..."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">If your supervisor handed you three well-chosen sources tomorrow that you had not read — sources directly relevant to your topic, context, and questions — what is the worst case scenario for your gap claim? Would it survive? Would it need to be narrowed? Could it disappear entirely?</div>
+    <div class="dq-probe">the gap would disappear with three more sources — which means it is not a gap in the literature, it is a gap in your reading.</div>
+    <textarea id="fm3-q4" placeholder="If three new directly relevant sources appeared, the worst case for my gap claim would be... My gap would survive because... OR: I would need to narrow it to... because..."></textarea>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- FAILURE MODE 4: UNDIALECTICAL LITERATURE -->
+<div class="failure-section fm4">
+  <div class="fs-header">
+    <div class="fs-num">4</div>
+    <div class="fs-info">
+      <div class="fs-label">Failure mode 4 — Undialectical literature engagement</div>
+      <div class="fs-title">You are accumulating sources, not building an argument</div>
+      <div class="fs-desc">Sources are summarised not argued. AND-BUT-THEREFORE labels are applied mechanically rather than representing genuine intellectual movement. There is no tension between sources — only accumulation. The literature review describes what scholars have said rather than showing where they agree, where they conflict, and what that conflict opens up.</div>
+    </div>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">State your BUT in one sentence without using the word "however," "but," or "although." The BUT is the intellectual tension at the heart of your study — the point where the established literature fails to account for something your study investigates. If you need a connective word to create the tension, the tension is not yet in the ideas themselves.</div>
+    <div class="dq-probe">you are using grammatical contrast to simulate intellectual tension. The tension needs to be in the substance of what the sources claim, not in how you connect them.</div>
+    <textarea id="fm4-q1" placeholder="The foundational literature establishes [X]. [Author/s] demonstrate that [Y] — and this means the field currently cannot account for [Z] in contexts where [condition]."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">Pick any two of your sources — one AND and one BUT. Do not summarise either. Instead, stage a confrontation between them: what specific claim does the AND source make that the BUT source directly challenges or complicates, and what does that confrontation reveal about the state of knowledge on your topic?</div>
+    <div class="dq-probe">you can summarise both sources but cannot make them speak to each other — which means you are treating them as independent items in a list rather than as participants in an intellectual conversation.</div>
+    <textarea id="fm4-q2" placeholder="[AND source, author year] claims that [specific claim]. [BUT source, author year] directly challenges this by arguing that [specific challenge]. What this confrontation reveals is..."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">What would a scholar who disagreed with your THEREFORE say? Name the strongest opposing position — not a straw man, but a genuinely held alternative view in the literature. Then explain why your study is positioned the way it is rather than adopting that opposing view.</div>
+    <div class="dq-probe">there is no opposing view in your framework — which means you have not engaged with the full range of scholarly positions, only those that support the direction you had already decided on.</div>
+    <textarea id="fm4-q3" placeholder="A scholar who disagreed with my THEREFORE would argue that [specific opposing position, ideally with author]. I am not adopting this position because... My study is positioned differently in that..."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">Your THEREFORE sources are supposed to point toward productive investigation of the tension you identified. For each THEREFORE source, explain: what specifically does it offer that neither the AND nor the BUT sources provide? If a THEREFORE source could be moved to AND or BUT without any loss, it is not doing THEREFORE work.</div>
+    <div class="dq-probe">your THEREFORE sources are just more AND sources — they agree with and extend the foundation without providing the tools or direction to investigate the tension.</div>
+    <textarea id="fm4-q4" placeholder="THEREFORE source 1 [author, year] offers [specific tool/framework/evidence] that neither AND nor BUT sources provide because... This points toward productive investigation by...&#10;&#10;THEREFORE source 2..."></textarea>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- FAILURE MODE 5: GOLDEN THREAD -->
+<div class="failure-section fm5">
+  <div class="fs-header">
+    <div class="fs-num">5</div>
+    <div class="fs-info">
+      <div class="fs-label">The golden thread test</div>
+      <div class="fs-title">Does a single coherent intellectual argument run through the whole study?</div>
+      <div class="fs-desc">A well-aligned proposal has a golden thread — one central intellectual argument that runs visibly from the problem statement through the research questions, through the literature engagement, through the conceptual framework, and into the research design. Every element should be a manifestation of that central argument. If you pull on any element, the whole thing should move.</div>
+    </div>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">State your central intellectual argument in three sentences. Not your topic. Not your research questions. The argument — the claim your study is making about why a particular phenomenon, in a particular context, requires investigation through a particular lens. If you need more than three sentences, the argument is not yet clear enough to anchor a proposal.</div>
+    <div class="dq-probe">you can describe your study but cannot state its central argument — which means there is not yet a golden thread, only a collection of related interests.</div>
+    <textarea id="fm5-q1" placeholder="My central intellectual argument is: [phenomenon] in [context] has not been adequately explained because [gap]. Investigating it through [lens] will show [what] — which matters because [intellectual stakes]."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">Take your central argument and trace it through each element of your proposal: purpose statement, problem statement, each research question, your conceptual framework, your methodology. At each point, explain in one phrase how that element expresses or serves the central argument. If any element cannot be connected back, it is either redundant or misaligned.</div>
+    <div class="dq-probe">some elements of your proposal are doing their own thing — they exist because they seem necessary for a proposal, not because they serve the argument.</div>
+    <textarea id="fm5-q2" rows="6" placeholder="Purpose statement → serves the argument by...&#10;Problem statement → serves the argument by...&#10;RQ1 → serves the argument by...&#10;RQ2 → serves the argument by...&#10;Conceptual framework → serves the argument by...&#10;Methodology → serves the argument by..."></textarea>
+  </div>
+
+  <div class="diagnostic-q">
+    <div class="dq-text">If your study produces exactly the findings you expect — if everything goes as designed — what will the field be able to say that it cannot say now? State this as a single declarative sentence in the present tense, as if the study is complete. This is your contribution. If you cannot state it, you do not yet know what your study is for.</div>
+    <div class="dq-probe">you can describe the process of the study but not its intellectual destination — which means the study does not yet have a clear purpose beyond producing a document.</div>
+    <textarea id="fm5-q3" placeholder="When this study is complete, the field will be able to say: ..."></textarea>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- DIAGNOSTIC PANEL -->
+<div class="diagnostic-panel" id="diagnostic-panel">
+  <div class="dp-title">Diagnostic summary</div>
+  <div class="dp-sub">Based on how you have engaged with these questions, the signals below indicate where your argument is under the most pressure. This is not a grade — it is a map of where to focus your attention before moving to Tool 2.</div>
+
+  <div class="signal-grid">
+    <div class="signal-card sc-fm1">
+      <div class="signal-label">Alignment</div>
+      <div class="signal-status" id="sig1">—</div>
+      <div class="signal-hint">PPSQ elements, verb, methodology, data sources connecting coherently</div>
+    </div>
+    <div class="signal-card sc-fm2">
+      <div class="signal-label">Argument strength</div>
+      <div class="signal-status" id="sig2">—</div>
+      <div class="signal-hint">Problem statement arguing not describing; contribution claim specific not circular</div>
+    </div>
+    <div class="signal-card sc-fm3">
+      <div class="signal-label">Knowledge gap</div>
+      <div class="signal-status" id="sig3">—</div>
+      <div class="signal-hint">Gap located in the literature not in your reading; gap type classified</div>
+    </div>
+    <div class="signal-card sc-fm4">
+      <div class="signal-label">Dialectical logic</div>
+      <div class="signal-status" id="sig4">—</div>
+      <div class="signal-hint">AND-BUT-THEREFORE representing genuine intellectual tension not mechanical labelling</div>
+    </div>
+  </div>
+
+  <div class="verdict-box verdict-notready" id="verdict-box">
+    Complete the questions above to generate your diagnostic.
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-diag" onclick="runDiagnostic()">Run diagnostic</button>
+    <button class="btn btn-export" onclick="buildExport()">Export my self-assessment ↓</button>
+    <a class="btn btn-primary" href="test-drive-builder.html">Proceed to Tool 2 →</a>
+  </div>
+
+  <div class="export-panel" id="export-panel">
+    <h3>Your self-assessment — for your own records</h3>
+    <textarea class="export-text" id="export-text" readonly></textarea>
+    <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+      <button class="btn btn-primary" onclick="copyExport()">Copy to clipboard</button>
+      <span class="copy-confirm" id="copy-confirm">Copied.</span>
+    </div>
+    <p style="font-size:12px;color:var(--text3);margin-top:8px;font-style:italic">This tool does not submit or store your responses. This export is for your own use only.</p>
+  </div>
+</div>
+
+</div>
+<script>
+function g(id){const e=document.getElementById(id);return e?e.value.trim():''}
+
+function wordCount(str){return str.split(/\s+/).filter(w=>w.length>0).length}
+
+function signalFromResponses(ids){
+  const responses=ids.map(id=>g(id));
+  const filled=responses.filter(r=>r.length>60);
+  const rich=responses.filter(r=>wordCount(r)>40);
+  if(rich.length===ids.length)return{icon:'✓',label:'Holding',color:'var(--and)'}
+  if(rich.length>=Math.ceil(ids.length/2))return{icon:'~',label:'Partial',color:'var(--amber)'}
+  return{icon:'✗',label:'Needs work',color:'var(--red)'}
+}
+
+function runDiagnostic(){
+  const s1=signalFromResponses(['fm1-q1','fm1-q2','fm1-q3','fm1-q4']);
+  const s2=signalFromResponses(['fm2-q1','fm2-q2','fm2-q3','fm2-q4']);
+  const s3=signalFromResponses(['fm3-q1','fm3-q2','fm3-q3','fm3-q4']);
+  const s4=signalFromResponses(['fm4-q1','fm4-q2','fm4-q3','fm4-q4']);
+
+  function setSignal(id,s){
+    const el=document.getElementById(id);
+    if(el){el.textContent=s.icon+' '+s.label;el.style.color=s.color;}
+  }
+  setSignal('sig1',s1);setSignal('sig2',s2);setSignal('sig3',s3);setSignal('sig4',s4);
+
+  const signals=[s1,s2,s3,s4];
+  const holding=signals.filter(s=>s.label==='Holding').length;
+  const partial=signals.filter(s=>s.label==='Partial').length;
+  const vbox=document.getElementById('verdict-box');
+
+  if(holding===4){
+    vbox.className='verdict-box verdict-ready';
+    vbox.textContent='Your argument is holding across all four areas. This does not mean it is perfect — it means the foundations are strong enough to move to Tool 2 and test your research design. Expect your weak points to surface there.';
+  } else if(holding>=2||partial>=2){
+    vbox.className='verdict-box verdict-partial';
+    const weak=[];
+    if(s1.label!=='Holding')weak.push('alignment');
+    if(s2.label!=='Holding')weak.push('argument strength');
+    if(s3.label!=='Holding')weak.push('knowledge gap');
+    if(s4.label!=='Holding')weak.push('dialectical logic');
+    vbox.textContent='Your argument is partially holding. The areas under most pressure are: '+weak.join(', ')+'. Address these before moving to Tool 2 — weaknesses in the PPSQ and literature engagement become compounded when embedded in a methodology.';
+  } else {
+    vbox.className='verdict-box verdict-notready';
+    vbox.textContent='Your argument needs significant development before moving to Tool 2. The diagnostic questions you struggled with are showing you exactly where to focus. Go back to Tool 1 and work through the sections that correspond to the failure modes flagged above.';
+  }
+
+  document.getElementById('diagnostic-panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function buildExport(){
+  const sections=[
+    ['FAILURE MODE 1 — ALIGNMENT',''],
+    ['Q1: RQ to problem statement connection',g('fm1-q1')],
+    ['Q2: Purpose verb and methodology compatibility',g('fm1-q2')],
+    ['Q3: Concepts in RQs grounded in problem statement',g('fm1-q3')],
+    ['Q4: Data sources linked to specific RQs',g('fm1-q4')],
+    ['FAILURE MODE 2 — ARGUMENT STRENGTH',''],
+    ['Q1: Where description ends and argument begins',g('fm2-q1')],
+    ['Q2: Contribution claim without generic vocabulary',g('fm2-q2')],
+    ['Q3: Necessity of the study',g('fm2-q3')],
+    ['Q4: Most vulnerable claim and response',g('fm2-q4')],
+    ['FAILURE MODE 3 — KNOWLEDGE GAP',''],
+    ['Q1: Why named scholars do not fill the gap',g('fm3-q1')],
+    ['Q2: Comparable studies and transferability',g('fm3-q2')],
+    ['Q3: Type of knowledge gap',g('fm3-q3')],
+    ['Q4: Gap survival test',g('fm3-q4')],
+    ['FAILURE MODE 4 — DIALECTICAL LOGIC',''],
+    ['Q1: BUT statement without connective words',g('fm4-q1')],
+    ['Q2: AND vs BUT confrontation',g('fm4-q2')],
+    ['Q3: Strongest opposing position',g('fm4-q3')],
+    ['Q4: What THEREFORE sources uniquely provide',g('fm4-q4')],
+    ['THE GOLDEN THREAD',''],
+    ['Q1: Central intellectual argument in three sentences',g('fm5-q1')],
+    ['Q2: Tracing the argument through each element',g('fm5-q2')],
+    ['Q3: What the field will be able to say when complete',g('fm5-q3')],
+  ];
+  const line='─'.repeat(60);
+  let out='RESEARCH SELF-ASSESSMENT — IS YOUR ARGUMENT HOLDING?\n';
+  out+=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+'\n';
+  out+=line+'\n\n';
+  sections.forEach(([label,val])=>{
+    if(val===''){out+='\n'+label+'\n'+line+'\n\n';return;}
+    out+=label+'\n';
+    out+=(val||'[not completed]')+'\n\n';
+  });
+  document.getElementById('export-text').value=out;
+  document.getElementById('export-panel').classList.add('visible');
+  document.getElementById('export-panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function copyExport(){
+  const ta=document.getElementById('export-text');ta.select();document.execCommand('copy');
+  const c=document.getElementById('copy-confirm');c.style.display='inline';
+  setTimeout(()=>{c.style.display='none';},2500);
+}
+</script>
+</body>
+</html>

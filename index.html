@@ -6,95 +6,105 @@
 <title>Masters Research Tools</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#ffffff;--bg2:#f5f4f0;--bg3:#eceae4;--text:#1a1a18;--text2:#5a5a56;--text3:#9a9a94;--border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);--radius:8px;--radius-lg:12px;--and:#1D9E75;--and-bg:#E1F5EE;--and-text:#085041;--but:#D85A30;--but-bg:#FAECE7;--but-text:#4A1B0C;--thr:#534AB7;--thr-bg:#EEEDFE;--thr-text:#26215C;--amber:#BA7517;--amber-bg:#FAEEDA;--amber-text:#412402}
+:root{--bg:#ffffff;--bg2:#f5f4f0;--bg3:#eceae4;--text:#1a1a18;--text2:#5a5a56;--text3:#9a9a94;--border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);--radius:8px;--radius-lg:12px;--and:#1D9E75;--and-bg:#E1F5EE;--and-text:#085041;--but:#D85A30;--but-bg:#FAECE7;--but-text:#4A1B0C;--thr:#534AB7;--thr-bg:#EEEDFE;--thr-text:#26215C;--amber:#BA7517;--amber-bg:#FAEEDA;--amber-text:#412402;--red:#C0392B;--red-bg:#FDEDEC;--red-text:#6E1B13}
 @media(prefers-color-scheme:dark){:root{--bg:#1c1c1a;--bg2:#252522;--bg3:#2e2e2b;--text:#e8e6de;--text2:#a8a69e;--text3:#6a6a64;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2)}}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px}
 .shell{max-width:780px;margin:0 auto;padding:3rem 1.5rem 4rem}
 .masthead{margin-bottom:2.5rem}
 .masthead h1{font-size:26px;font-weight:500;margin-bottom:8px}
-.masthead p{font-size:14px;color:var(--text2);line-height:1.6;max-width:560px}
+.masthead p{font-size:14px;color:var(--text2);line-height:1.6;max-width:580px}
 .process-note{padding:14px 16px;border-radius:var(--radius);background:var(--bg2);border-left:3px solid var(--thr);font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:2.5rem}
 .process-note strong{color:var(--thr-text);font-weight:500}
 .section-label{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+.sequence{display:flex;align-items:center;gap:6px;margin-bottom:2.5rem;overflow-x:auto;padding-bottom:4px;flex-wrap:wrap}
+.seq-node{padding:8px 13px;border-radius:var(--radius);font-size:12px;font-weight:500;white-space:nowrap;border:0.5px solid var(--border);background:var(--bg2);color:var(--text2)}
+.seq-arrow{color:var(--text3);font-size:13px;flex-shrink:0}
+.seq-node.s1{background:var(--thr-bg);color:var(--thr-text);border-color:var(--thr)}
+.seq-node.s2{background:var(--red-bg);color:var(--red-text);border-color:var(--red)}
+.seq-node.s3{background:var(--amber-bg);color:var(--amber-text);border-color:var(--amber)}
+.seq-node.s4{background:var(--but-bg);color:var(--but-text);border-color:var(--but)}
 .tool-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:2.5rem}
-.tool-card{display:block;padding:20px 22px;border-radius:var(--radius-lg);border:0.5px solid var(--border);background:var(--bg);text-decoration:none;transition:border-color .15s,background .15s;position:relative;overflow:hidden}
+.tool-card{display:block;padding:20px 22px 18px;border-radius:var(--radius-lg);border:0.5px solid var(--border);background:var(--bg);text-decoration:none;transition:border-color .15s,background .15s;position:relative}
 .tool-card:hover{border-color:var(--border2);background:var(--bg2)}
-.tool-card-num{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.tool-card-num{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
 .tool-card-title{font-size:17px;font-weight:500;color:var(--text);margin-bottom:6px}
-.tool-card-desc{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:12px}
+.tool-card-desc{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:12px;padding-right:24px}
 .tool-card-tags{display:flex;gap:6px;flex-wrap:wrap}
 .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500}
-.tool-card-arrow{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--text3)}
-.card-1 .tool-card-num{color:var(--thr-text)}
+.tool-card-arrow{position:absolute;right:18px;top:22px;font-size:18px;color:var(--text3)}
 .card-1{border-left:3px solid var(--thr)}
-.card-2 .tool-card-num{color:var(--amber-text)}
-.card-2{border-left:3px solid var(--amber)}
-.card-3 .tool-card-num{color:var(--but-text)}
-.card-3{border-left:3px solid var(--but)}
-.sequence{display:flex;align-items:center;gap:8px;margin-bottom:2.5rem;overflow-x:auto;padding-bottom:4px}
-.seq-node{padding:8px 14px;border-radius:var(--radius);font-size:12px;font-weight:500;white-space:nowrap;border:0.5px solid var(--border);background:var(--bg2);color:var(--text2)}
-.seq-arrow{color:var(--text3);font-size:14px;flex-shrink:0}
-.seq-node.s1{background:var(--thr-bg);color:var(--thr-text);border-color:var(--thr)}
-.seq-node.s2{background:var(--amber-bg);color:var(--amber-text);border-color:var(--amber)}
-.seq-node.s3{background:var(--but-bg);color:var(--but-text);border-color:var(--but)}
+.card-1 .tool-card-num{color:var(--thr-text)}
+.card-2{border-left:3px solid var(--red)}
+.card-2 .tool-card-num{color:var(--red-text)}
+.card-3{border-left:3px solid var(--amber)}
+.card-3 .tool-card-num{color:var(--amber-text)}
+.card-4{border-left:3px solid var(--but)}
+.card-4 .tool-card-num{color:var(--but-text)}
 .footer-note{font-size:12px;color:var(--text3);border-top:0.5px solid var(--border);padding-top:1.25rem;line-height:1.6}
 @media(max-width:500px){.tool-card-arrow{display:none}}
 </style>
 </head>
 <body>
 <div class="shell">
-
 <div class="masthead">
   <h1>Masters research tools</h1>
-  <p>Three tools to help you develop the thinking behind your research proposal. Each tool builds on the previous one. Work through them in order.</p>
+  <p>Four tools to develop the thinking behind your research proposal. Work through them in order. Each tool builds on and stress-tests what the previous one produced.</p>
 </div>
-
-<div class="process-note"><strong>On thinking order versus writing order:</strong> Your proposal is read in the order: purpose → problem → questions → literature → design. But it is developed in the reverse order — you discover your PPSQ through working with the literature, and you justify your design through working with your questions. These tools follow the thinking order. The writing order comes after.</div>
-
+<div class="process-note"><strong>On thinking order versus writing order:</strong> Your proposal is read in the order: purpose → problem → questions → literature → design. But it is developed differently — you discover your PPSQ through working with the literature, and you justify your design through working with your questions. These tools follow the thinking order. The writing order comes after.</div>
 <div class="section-label">The sequence</div>
 <div class="sequence">
-  <div class="seq-node s1">Research thinking tool</div>
+  <div class="seq-node s1">1. Research thinking</div>
   <div class="seq-arrow">→</div>
-  <div class="seq-node s2">Test drive builder</div>
+  <div class="seq-node s2">2. Self-assessment</div>
   <div class="seq-arrow">→</div>
-  <div class="seq-node s3">Peer review</div>
+  <div class="seq-node s3">3. Test drive builder</div>
+  <div class="seq-arrow">→</div>
+  <div class="seq-node s4">4. Peer review</div>
   <div class="seq-arrow">→</div>
   <div class="seq-node">Your proposal</div>
 </div>
-
 <div class="section-label">Tools</div>
 <div class="tool-grid">
-
-  <a class="tool-card card-1" href="research-thinking-tool.html">
+  <a class="tool-card card-1" href="research-conceptualisation-tool.html">
     <div class="tool-card-num">Tool 1 — Start here</div>
     <div class="tool-card-title">Masters research thinking tool</div>
     <div class="tool-card-desc">Develops the core intellectual argument behind your study — from social provocation through the AND-BUT-THEREFORE dialectical structure to your PPSQ. This is where your research problem becomes a researchable intellectual argument.</div>
     <div class="tool-card-tags">
       <span class="tag" style="background:var(--thr-bg);color:var(--thr-text)">PPSQ</span>
-      <span class="tag" style="background:var(--thr-bg);color:var(--thr-text)">Literature</span>
       <span class="tag" style="background:var(--thr-bg);color:var(--thr-text)">AND-BUT-THEREFORE</span>
       <span class="tag" style="background:var(--thr-bg);color:var(--thr-text)">Knowledge gap</span>
+      <span class="tag" style="background:var(--thr-bg);color:var(--thr-text)">Literature</span>
     </div>
     <div class="tool-card-arrow">→</div>
   </a>
-
-  <a class="tool-card card-2" href="test-drive-builder.html">
-    <div class="tool-card-num">Tool 2 — Before your presentation</div>
+  <a class="tool-card card-2" href="self-assessment.html">
+    <div class="tool-card-num">Tool 2 — Before you design</div>
+    <div class="tool-card-title">Is your argument actually holding?</div>
+    <div class="tool-card-desc">A diagnostic self-assessment that stress-tests the logical foundations of your argument before you move into research design. Exposes misalignment, unconvincing argument, false knowledge gaps, and undialectical literature engagement. Vague answers are the diagnosis.</div>
+    <div class="tool-card-tags">
+      <span class="tag" style="background:var(--red-bg);color:var(--red-text)">Alignment</span>
+      <span class="tag" style="background:var(--red-bg);color:var(--red-text)">Argument</span>
+      <span class="tag" style="background:var(--red-bg);color:var(--red-text)">Knowledge gap</span>
+      <span class="tag" style="background:var(--red-bg);color:var(--red-text)">Golden thread</span>
+    </div>
+    <div class="tool-card-arrow">→</div>
+  </a>
+  <a class="tool-card card-3" href="test-drive-builder.html">
+    <div class="tool-card-num">Tool 3 — Before your presentation</div>
     <div class="tool-card-title">Test drive your research — builder</div>
-    <div class="tool-card-desc">Tests the logical alignment of your research design — from PPSQ through conceptual framework, methodology, methods, data, and ethics. Produces an alignment map that shows where your chain holds and where it needs strengthening before you build your slides.</div>
+    <div class="tool-card-desc">Tests the logical alignment of your research design — from PPSQ through conceptual framework, methodology, methods, data, and ethics. Produces an alignment map showing where your chain holds and where it needs strengthening before you build your slides.</div>
     <div class="tool-card-tags">
       <span class="tag" style="background:var(--amber-bg);color:var(--amber-text)">Conceptual framework</span>
       <span class="tag" style="background:var(--amber-bg);color:var(--amber-text)">Methodology</span>
       <span class="tag" style="background:var(--amber-bg);color:var(--amber-text)">Research design</span>
-      <span class="tag" style="background:var(--amber-bg);color:var(--amber-text)">Alignment</span>
+      <span class="tag" style="background:var(--amber-bg);color:var(--amber-text)">Alignment map</span>
     </div>
     <div class="tool-card-arrow">→</div>
   </a>
-
-  <a class="tool-card card-3" href="test-drive-reviewer.html">
-    <div class="tool-card-num">Tool 3 — For peer reviewers</div>
+  <a class="tool-card card-4" href="test-drive-reviewer.html">
+    <div class="tool-card-num">Tool 4 — For peer reviewers</div>
     <div class="tool-card-title">Test drive your research — peer reviewer</div>
-    <div class="tool-card-desc">Develops your capacity to evaluate research design logic — the same skill a proposal panel uses. You reason through each criterion before scoring, producing a specific and justified review. Reviewing someone else's design prepares you to defend your own.</div>
+    <div class="tool-card-desc">Develops your capacity to evaluate research design logic — the same skill a proposal panel uses. You reason through each criterion before scoring. Reviewing someone else's design prepares you to defend your own.</div>
     <div class="tool-card-tags">
       <span class="tag" style="background:var(--but-bg);color:var(--but-text)">Peer review</span>
       <span class="tag" style="background:var(--but-bg);color:var(--but-text)">Evaluation</span>
@@ -103,11 +113,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
     </div>
     <div class="tool-card-arrow">→</div>
   </a>
-
 </div>
-
 <div class="footer-note">These tools develop thinking, not writing. Your responses are held in your browser session only and are not submitted or stored anywhere. Use the export function in each tool to save your work before closing. Each tool takes approximately 30–45 minutes to complete thoughtfully.</div>
-
 </div>
 </body>
 </html>
