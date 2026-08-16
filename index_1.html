@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contention of Space: Whose Imagination Matters? — Cleo Magagane</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f0eb;
+    --red: #c0392b;
+    --red-dim: #8b1a10;
+    --gold: #c8a96e;
+    --grey-light: #e8e2da;
+    --grey-mid: #b0a898;
+    --grey-dark: #2a2520;
+    --card-bg: #141210;
+    --border: rgba(200,169,110,0.2);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+    background: var(--black);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(192,57,43,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 80% 80%, rgba(200,169,110,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 7vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    max-width: 900px;
+    margin: 0 auto 1rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--red);
+  }
+
+  .hero-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 3rem;
+    justify-content: center;
+    font-size: 0.82rem;
+    color: var(--grey-mid);
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .hero-meta span { display: flex; align-items: center; gap: 0.5rem; }
+  .hero-meta strong { color: var(--white); font-weight: 500; }
+
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--grey-mid);
+    background: rgba(255,255,255,0.02);
+  }
+
+  .badge.doi {
+    border-color: rgba(200,169,110,0.4);
+    color: var(--gold);
+    background: rgba(200,169,110,0.05);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--grey-mid);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.4s forwards;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    overflow-x: auto;
+  }
+
+  nav a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--grey-mid);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--gold); }
+
+  /* ── SECTION WRAPPER ── */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1rem;
+  }
+
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+    line-height: 1.15;
+    margin-bottom: 3rem;
+    color: var(--white);
+  }
+
+  /* ── CARD GRID ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .card {
+    background: var(--card-bg);
+    padding: 2rem 2rem 2.5rem;
+    position: relative;
+    transition: background 0.25s;
+  }
+
+  .card:hover { background: #1a1612; }
+
+  .card-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--red);
+    margin-bottom: 1rem;
+    opacity: 0.7;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  .card-body {
+    font-size: 0.88rem;
+    color: var(--grey-mid);
+    line-height: 1.75;
+  }
+
+  .card-body p + p { margin-top: 0.75rem; }
+
+  .card-body ul {
+    padding-left: 1.2rem;
+    margin-top: 0.5rem;
+  }
+
+  .card-body li { margin-bottom: 0.4rem; }
+
+  .card-tag {
+    display: inline-block;
+    margin-top: 1.25rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border-bottom: 1px solid rgba(200,169,110,0.3);
+    padding-bottom: 2px;
+  }
+
+  /* ── WIDE CARD ── */
+  .card-wide {
+    grid-column: 1 / -1;
+    background: var(--card-bg);
+    padding: 2.5rem 2rem;
+    border-top: 2px solid var(--red);
+  }
+
+  .card-wide .card-title {
+    font-size: 1.4rem;
+  }
+
+  /* ── QUOTE BLOCK ── */
+  .pull-quote {
+    margin: 4rem 0;
+    padding: 2.5rem 3rem;
+    border-left: 3px solid var(--red);
+    background: var(--card-bg);
+  }
+
+  .pull-quote p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    line-height: 1.5;
+    color: var(--white);
+  }
+
+  /* ── ACTIVITY TABLE ── */
+  .activity-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .activity-grid { grid-template-columns: 1fr; }
+  }
+
+  .activity-cell {
+    background: var(--card-bg);
+    padding: 1.75rem;
+  }
+
+  .activity-cell h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .activity-cell p {
+    font-size: 0.85rem;
+    color: var(--grey-mid);
+    line-height: 1.7;
+  }
+
+  /* ── QUADRANT ── */
+  .quadrant {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  .quad-cell {
+    background: var(--card-bg);
+    padding: 1.75rem;
+    position: relative;
+  }
+
+  .quad-cell::before {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .quad-1::before { content: '01 — Utopian / Idealist'; color: var(--gold); }
+  .quad-2::before { content: '02 — Empowered Optimist'; color: var(--gold); }
+  .quad-3::before { content: '04 — Fatalist'; color: var(--red); }
+  .quad-4::before { content: '03 — Reformist / Activist'; color: var(--red); }
+
+  .quad-cell p {
+    font-size: 0.85rem;
+    color: var(--grey-mid);
+    line-height: 1.65;
+  }
+
+  /* ── REFRAMES ── */
+  .reframe-list {
+    display: grid;
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  .reframe-item {
+    background: var(--card-bg);
+    padding: 1.5rem 2rem;
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .reframe-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--red);
+    padding-top: 0.15rem;
+  }
+
+  .reframe-item p {
+    font-size: 0.9rem;
+    color: var(--grey-mid);
+    line-height: 1.7;
+  }
+
+  /* ── CITATION BOX ── */
+  .citation-box {
+    margin: 4rem 0 0;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    padding: 2.5rem;
+  }
+
+  .citation-box h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.25rem;
+  }
+
+  .citation-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--grey-light);
+    line-height: 1.8;
+    background: rgba(255,255,255,0.03);
+    padding: 1.25rem;
+    border-left: 2px solid var(--red);
+  }
+
+  .doi-placeholder {
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: var(--grey-mid);
+    line-height: 2;
+  }
+
+  footer a { color: var(--gold); text-decoration: none; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50%       { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 640px) {
+    .quadrant { grid-template-columns: 1fr; }
+    .card-grid { grid-template-columns: 1fr; }
+    .pull-quote { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div>
+    <p class="hero-eyebrow">Futures Literacy Lab &nbsp;·&nbsp; Antwerp Management School &nbsp;·&nbsp; Lab 6, 2026</p>
+    <h1 class="hero-title">Contention of Space:<br><em>Whose Imagination Matters?</em></h1>
+    <p class="hero-subtitle">The Future of Creative Economies</p>
+    <div class="hero-meta">
+      <span><strong>Cleo Magagane</strong></span>
+      <span>Wits School of Governance</span>
+      <span>University of the Witwatersrand, Johannesburg</span>
+      <span>2 June 2026</span>
+    </div>
+    <div class="hero-badges">
+      <span class="badge">Draws on PhD Research Project</span>
+      <span class="badge">Leadership in Culture Programme</span>
+      <span class="badge doi">DOI: <em id="doi-display">Pending Zenodo Registration</em></span>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <a href="#framing">Framing</a>
+  <a href="#urban">Urban Planning</a>
+  <a href="#space">Contention of Space</a>
+  <a href="#margins">Value from Margins</a>
+  <a href="#futures">Futures Literacy</a>
+  <a href="#activity">Mini FLL Activity</a>
+  <a href="#reframes">Group Reframes</a>
+  <a href="#cite">How to Cite</a>
+</nav>
+
+<!-- 1. FRAMING -->
+<section id="framing">
+  <div class="section">
+    <p class="section-label reveal">01 — Research Framing</p>
+    <h2 class="section-heading reveal">Imagination-Based Approaches for<br>Planning and Governing the African City</h2>
+    <div class="card-grid">
+      <div class="card reveal">
+        <p class="card-number">01.01</p>
+        <h3 class="card-title">The Central Argument</h3>
+        <div class="card-body">
+          <p>This presentation draws on an ongoing PhD research project examining how imagination-based approaches can reframe the planning and governance of African cities.</p>
+          <p>The core provocation is deceptively simple: whose imagination is being used when we design, govern, and plan the city?</p>
+        </div>
+        <span class="card-tag">PhD Research</span>
+      </div>
+      <div class="card reveal">
+        <p class="card-number">01.02</p>
+        <h3 class="card-title">Why Creative Economies?</h3>
+        <div class="card-body">
+          <p>Creative economies are driven by culture, identity, innovation, storytelling, design, music, art, fashion, digital media, and everyday creativity.</p>
+          <p>In African cities, they often emerge within informal, fluid, and adaptive environments that traditional planning systems overlook.</p>
+        </div>
+        <span class="card-tag">Creative Economies</span>
+      </div>
+      <div class="card reveal">
+        <p class="card-number">01.03</p>
+        <h3 class="card-title">What Futures Literacy Contributes</h3>
+        <div class="card-body">
+          <p>Futures Literacy is the ability to understand and use the future to make better decisions in the present. It helps people recognise how assumptions, fears, hopes, and dominant narratives shape the way we imagine tomorrow.</p>
+          <p>Imagination becomes a tool for exploring alternative possibilities beyond what currently exists.</p>
+        </div>
+        <span class="card-tag">Futures Literacy</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- 2. URBAN PLANNING -->
+<section id="urban">
+  <div class="section">
+    <p class="section-label reveal">02 — The Persistent Paradox</p>
+    <h2 class="section-heading reveal">African Cities and Urban Planning:<br>Whose Imagination Matters?</h2>
+
+    <div class="card-grid">
+      <div class="card reveal">
+        <p class="card-number">02.01</p>
+        <h3 class="card-title">The Persistent Paradox</h3>
+        <div class="card-body">
+          <p>African cities are complex, fluid, and constantly evolving (Simone, 2004). Yet the planning frameworks applied to them are frequently imported, static, and ill-fitted to the realities they claim to govern.</p>
+        </div>
+        <span class="card-tag">Urban Theory</span>
+      </div>
+      <div class="card reveal">
+        <p class="card-number">02.02</p>
+        <h3 class="card-title">Gray Spaces</h3>
+        <div class="card-body">
+          <p>Gray spaces are informal, temporary, or semi-legal developments within contemporary city regions. They exist in a legal twilight zone: neither fully integrated into official city master plans ("white spaces") nor entirely condemned or cleared ("black spaces") — Yiftachel (2009).</p>
+          <p>They are, in other words, the spaces where most urban life actually happens.</p>
+        </div>
+        <span class="card-tag">Spatial Theory</span>
+      </div>
+      <div class="card reveal">
+        <p class="card-number">02.03</p>
+        <h3 class="card-title">The Tension</h3>
+        <div class="card-body">
+          <p>We speak of "context-sensitive planning" but in reality:</p>
+          <ul>
+            <li>Practice often does not reflect lived urban realities</li>
+            <li>Planning systems remain institutionally and conceptually misaligned</li>
+            <li>Education continues to reproduce Eurocentric paradigms</li>
+          </ul>
+        </div>
+        <span class="card-tag">Critical Planning</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- 3. CONTENTION OF SPACE -->
+<section id="space">
+  <div class="section">
+    <p class="section-label reveal">03 — Core Provocation</p>
+    <h2 class="section-heading reveal">Contention of Space</h2>
+
+    <div class="pull-quote reveal">
+      <p>Whose visions shape the city, and whose ways of living are treated as disorder? This space reveals the tension between formal planning systems and the everyday practices through which people create livelihoods, belonging, mobility, and survival in the African city.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card reveal">
+        <p class="card-number">03.01</p>
+        <h3 class="card-title">The Planned vs the Lived</h3>
+        <div class="card-body">
+          <p>The African city is not only planned through policy and infrastructure, but through everyday acts of survival, creativity, movement, and negotiation.</p>
+        </div>
+        <span class="card-tag">Urban Life</span>
+      </div>
+      <div class="card reveal">
+        <p class="card-number">03.02</p>
+        <h3 class="card-title">Multiple Coexisting Realities</h3>
+        <div class="card-body">
+          <p>Urban space in African cities is contested — multiple realities, economies, and imaginations coexist. This challenges dominant assumptions of order, legitimacy, and planning, inviting reflection on whose futures are centred, and whose are marginalised in urban governance.</p>
+        </div>
+        <span class="card-tag">Urban Governance</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- 4. VALUE FROM MARGINS -->
+<section id="margins">
+  <div class="section">
+    <p class="section-label reveal">04 — Creative Economies</p>
+    <h2 class="section-heading reveal">Creating Value from the Margins</h2>
+
+    <div class="pull-quote reveal">
+      <p>Beyond informality, this space represents an active creative and economic ecosystem shaped by mobility, exchange, improvisation, and lived experience — forms of urban intelligence often overlooked in conventional planning frameworks.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card reveal">
+        <p class="card-number">04.01</p>
+        <h3 class="card-title">What Creative Economies Generate</h3>
+        <div class="card-body">
+          <p>Creative economies create new forms of value, livelihoods, entrepreneurship, and social connection within urban spaces.</p>
+          <p>They reveal how communities continuously imagine, negotiate, and reshape urban life from the ground up.</p>
+        </div>
+        <span class="card-tag">Value Creation</span>
+      </div>
+      <div class="card reveal">
+        <p class="card-number">04.02</p>
+        <h3 class="card-title">By 2046</h3>
+        <div class="card-body">
+          <p>Creative economies have become global systems of imagination, where culture, storytelling, digital creativity, and identity shape economic and political influence as much as traditional industries.</p>
+          <p>While creativity connects the world, tensions emerge around cultural ownership, authenticity, and whose imagination dominates global platforms.</p>
+        </div>
+        <span class="card-tag">Futures Scenario</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- 5. FUTURES LITERACY -->
+<section id="futures">
+  <div class="section">
+    <p class="section-label reveal">05 — Methodological Framework</p>
+    <h2 class="section-heading reveal">Futures Literacy Labs</h2>
+
+    <div class="card-grid">
+      <div class="card-wide reveal">
+        <p class="card-number">05.00</p>
+        <h3 class="card-title">What Are Futures Literacy Labs?</h3>
+        <div class="card-body">
+          <p>Futures Literacy Labs (FLLs) are participatory foresight processes developed under UNESCO's Futures Literacy initiative. Introduced by Riel Miller, Futures Literacy is understood as a core capability that enables individuals and communities to recognise how the future shapes present perceptions and actions (Miller, 2015; 2018).</p>
+          <p style="margin-top:0.75rem">FLLs are designed as interactive, collective learning spaces that challenge taken-for-granted assumptions about the future. Through structured exploration, participants engage with multiple alternative futures, surfacing hidden biases and expanding how social, economic, and cultural dynamics are understood. In doing so, FLLs open up new possibilities for thinking, planning, and decision-making in complex and uncertain contexts.</p>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <p class="card-number">05.01</p>
+        <h3 class="card-title">Lab Phase 1: Tacit to Explicit</h3>
+        <div class="card-body">
+          <p>Participants uncover multiple embedded assumptions about their futures and hopefully realise that they can challenge or let go of original assumptions. The process harnesses collective intelligence, inspiring each other to make implicit premises explicit.</p>
+        </div>
+        <span class="card-tag">Reveal</span>
+      </div>
+      <div class="card reveal">
+        <p class="card-number">05.02</p>
+        <h3 class="card-title">Lab Phase 2: Reframing</h3>
+        <div class="card-body">
+          <p>The objective is to imagine and describe a future from an unfamiliar point of departure: a scenario that is neither probable nor desirable, which provokes and plays with a new set of anticipatory assumptions.</p>
+        </div>
+        <span class="card-tag">Imagine & Invent</span>
+      </div>
+      <div class="card reveal">
+        <p class="card-number">05.03</p>
+        <h3 class="card-title">Lab Phase 3: New Questions</h3>
+        <div class="card-body">
+          <p>Participants return to the present, reassessing their current perceptions and raising new questions that can influence future action.</p>
+        </div>
+        <span class="card-tag">Ask</span>
+      </div>
+      <div class="card reveal">
+        <p class="card-number">05.04</p>
+        <h3 class="card-title">Lab Phase 4: Next Steps</h3>
+        <div class="card-body">
+          <p>The objective is to consolidate group questions, insights, and lessons, identifying possible action for future change.</p>
+        </div>
+        <span class="card-tag">Acquire</span>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem">
+      <p class="section-label reveal">Orientations toward the future</p>
+      <h3 class="section-heading reveal" style="font-size:1.4rem">Four Anticipatory Stances: 2046</h3>
+      <div class="quadrant reveal">
+        <div class="quad-cell quad-1">
+          <p>The future is looking bright, and this is true whether we do anything or not.</p>
+        </div>
+        <div class="quad-cell quad-2">
+          <p>The future is looking bright, and we must keep acting to ensure that this remains true.</p>
+        </div>
+        <div class="quad-cell quad-3">
+          <p>The future is looking rough, and, let's be honest, there is nothing that we can do about it.</p>
+        </div>
+        <div class="quad-cell quad-4">
+          <p>The future's looking rough, and the only way that is going to change is if we do something about it — so let's get moving.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- 6. ACTIVITY -->
+<section id="activity">
+  <div class="section">
+    <p class="section-label reveal">06 — Mini FLL Activity</p>
+    <h2 class="section-heading reveal">The Future of Creative Economies</h2>
+
+    <div class="activity-grid reveal">
+      <div class="activity-cell">
+        <h4>Phase 1a — Probable Futures (2046)</h4>
+        <p>What do you think is the probable future for creative economies? What do you rationally expect will happen, based on data, trends, and realistic assessment (not wishes or fears)?</p>
+        <p style="margin-top:0.75rem; color: var(--gold); font-size:0.78rem">Each person writes 3 sticky notes → round robin sharing → scenario clustering → pick one that is most mutually interesting to represent the group.</p>
+      </div>
+      <div class="activity-cell">
+        <h4>Phase 1b — Preferable Futures (2046)</h4>
+        <p>What would your dream wish or hope for? What is your vision of a good future for creative economies? This is the future we want to happen, based on values, aspirations, and desires.</p>
+        <p style="margin-top:0.75rem; color: var(--gold); font-size:0.78rem">Each person writes 3 sticky notes → round robin sharing → scenario clustering → pick one that is most mutually interesting to represent the group.</p>
+      </div>
+      <div class="activity-cell">
+        <h4>Phase 2 — Causal Layered Analysis</h4>
+        <p>Using the selected probable future as a headline, map out the iceberg at each layer: 1. Selected Headline, 2. Systems (PESTLE), 3. Worldviews, 4. Myths and Metaphors.</p>
+        <p style="margin-top:0.75rem; color: var(--gold); font-size:0.78rem">Based on Inayatullah's Causal Layered Analysis framework.</p>
+      </div>
+    </div>
+
+    <div class="card-grid" style="margin-top:1.5px">
+      <div class="card-wide reveal">
+        <p class="card-number">06.01</p>
+        <h3 class="card-title">Why This Matters for African Urban Planning</h3>
+        <div class="card-body">
+          <ul>
+            <li>African cities are dynamic, adaptive, and constantly reshaped through culture and everyday creativity.</li>
+            <li>Futures Literacy Labs help communities and practitioners rethink how creativity, culture, and imagination contribute to urban transformation.</li>
+            <li>They support more inclusive, context-sensitive, and future-conscious approaches to planning and governance.</li>
+            <li>They position creative economies not as secondary industries, but as central drivers of social, spatial, and economic futures.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- 7. GROUP REFRAMES -->
+<section id="reframes">
+  <div class="section">
+    <p class="section-label reveal">07 — Group Reframes</p>
+    <h2 class="section-heading reveal">Additional Group Reframes</h2>
+
+    <div class="reframe-list reveal">
+      <div class="reframe-item">
+        <span class="reframe-num">G1</span>
+        <p>Creativity becomes a site of both opportunity and contestation over ownership, visibility, and cultural power.</p>
+      </div>
+      <div class="reframe-item">
+        <span class="reframe-num">G2</span>
+        <p>AI and global platforms increasingly shape which cultures, stories, and identities gain global value.</p>
+      </div>
+      <div class="reframe-item">
+        <span class="reframe-num">G3</span>
+        <p>Societies struggle to protect cultural diversity from standardisation and commercial extraction.</p>
+      </div>
+      <div class="reframe-item">
+        <span class="reframe-num">G4</span>
+        <p>The boundaries between culture, technology, governance, and everyday life become increasingly blurred, reshaping how communities create meaning and belonging.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- 8. HOW TO CITE -->
+<section id="cite">
+  <div class="section">
+    <p class="section-label reveal">08 — Citation</p>
+    <h2 class="section-heading reveal">How to Cite This Work</h2>
+
+    <div class="citation-box reveal">
+      <h3>Preferred Citation (APA 7th)</h3>
+      <div class="citation-text">
+        Magagane, C. (2026). <em>Contention of space: Whose imagination matters? The future of creative economies</em> [Futures Literacy Lab Presentation, Antwerp Management School Leadership in Culture Programme, Lab 6]. Wits School of Governance, University of the Witwatersrand. <span class="doi-placeholder">[DOI to be assigned via Zenodo]</span>
+      </div>
+
+      <h3 style="margin-top:2rem">Note on This Material</h3>
+      <p style="font-size:0.85rem; color:var(--grey-mid); line-height:1.75; margin-top:0.75rem">This presentation draws on an ongoing PhD research project by Cleo Magagane at the Wits School of Governance, University of the Witwatersrand, Johannesburg. The ideas, arguments, and framing are original and unpublished beyond this presentation. Please cite accordingly and contact the author for permissions beyond standard academic fair use.</p>
+
+      <h3 style="margin-top:2rem">Licence</h3>
+      <p style="font-size:0.85rem; color:var(--grey-mid); line-height:1.75; margin-top:0.75rem">
+        <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" style="color:var(--gold)">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Cleo Magagane &nbsp;·&nbsp; Wits School of Governance &nbsp;·&nbsp; University of the Witwatersrand, Johannesburg</p>
+  <p style="margin-top:0.5rem">Futures Literacy Lab Presentation &nbsp;·&nbsp; Antwerp Management School &nbsp;·&nbsp; 2 June 2026</p>
+  <p style="margin-top:0.5rem">Archived via <a href="https://zenodo.org">Zenodo</a> &nbsp;·&nbsp; DOI: <span id="doi-footer">Pending registration</span></p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
